@@ -26,6 +26,10 @@ const Router = () => {
     if (!loading && !currentUser && location.pathname !== "/login") {
       navigate("/login")
     }
+
+    if (!loading && currentUser && location.pathname === "/login") {
+      navigate("/")
+    }
   }, [currentUser, loading, location.pathname])
 
   if (loading || !currentUser) {

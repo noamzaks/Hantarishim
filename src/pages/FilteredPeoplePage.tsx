@@ -25,6 +25,9 @@ const FilteredPeoplePage = () => {
   const present = filteredNames.filter(
     (personName) => course.people![personName].present
   ).length
+  const attributes = Object.keys(course.attributes ?? {})
+    .sort()
+    .filter((x) => x !== attribute)
 
   return (
     <>
@@ -60,51 +63,54 @@ const FilteredPeoplePage = () => {
           איפוס נוכחות
         </Button>
       </div>
-      <div style={{ maxWidth: 300 }}>
-        <DataTable
-          tableName="אנשים"
-          data={{
-            head: ["שם", "נוכחות"],
-            body: filteredNames.map((personName) => [
+      <DataTable
+        tableName="אנשים"
+        data={{
+          head: ["שם", "נוכחות"].concat(attributes),
+          body: filteredNames.map((personName) =>
+            [
               personName,
               course.people![personName].present ? "נוכח/ת" : "חסר/ה",
-            ]),
-          }}
-          renderValue={(rowIndex, columnName, value) => {
-            if (columnName === "שם") {
-              return (
-                <LinkAnchor
-                  key={rowIndex}
-                  href={`/people/${filteredNames[rowIndex]}`}
-                >
-                  {filteredNames[rowIndex]}
-                </LinkAnchor>
+            ].concat(
+              attributes.map(
+                (attribute) => course.people![personName].attributes[attribute]
               )
-            }
+            )
+          ),
+        }}
+        renderValue={(rowIndex, columnName, value) => {
+          if (columnName === "שם") {
+            return (
+              <LinkAnchor
+                key={rowIndex}
+                href={`/people/${filteredNames[rowIndex]}`}
+              >
+                {filteredNames[rowIndex]}
+              </LinkAnchor>
+            )
+          }
 
-            if (columnName === "נוכחות") {
-              return (
-                <Switch
-                  label={value}
-                  key={rowIndex}
-                  checked={
-                    course.people![filteredNames[rowIndex]].present ?? false
-                  }
-                  disabled={loading}
-                  onChange={(e) => {
-                    course.people![filteredNames[rowIndex]].present =
-                      e.currentTarget.checked
-                    setCourse(course, setLoading)
-                  }}
-                />
-              )
-            }
+          if (columnName === "נוכחות") {
+            return (
+              <Switch
+                label={value}
+                key={rowIndex}
+                checked={
+                  course.people![filteredNames[rowIndex]].present ?? false
+                }
+                disabled={loading}
+                onChange={(e) => {
+                  course.people![filteredNames[rowIndex]].present =
+                    e.currentTarget.checked
+                  setCourse(course, setLoading)
+                }}
+              />
+            )
+          }
 
-            return <React.Fragment key={rowIndex}>{value}</React.Fragment>
-          }}
-          hideDownload
-        />
-      </div>
+          return <React.Fragment key={rowIndex}>{value}</React.Fragment>
+        }}
+      />
     </>
   )
 }

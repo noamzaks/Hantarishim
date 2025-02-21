@@ -39,7 +39,6 @@ const AssignmentPage = () => {
 
       <h2>אנשים</h2>
       <DataTable
-        hideDownload
         tableName={assignmentName}
         data={{
           head: ["שם", "הוגש"],

@@ -91,7 +91,6 @@ const PersonPage = () => {
 
       <h2>מטלות</h2>
       <DataTable
-        hideDownload
         tableName="מטלות"
         data={{
           head: ["שם", "תאריך הגשה", "הוגש"],
