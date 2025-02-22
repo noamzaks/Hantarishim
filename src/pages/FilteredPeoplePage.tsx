@@ -41,7 +41,7 @@ const FilteredPeoplePage = () => {
         </h1>
         <p style={{ marginBottom: 5 }}>
           <b>כאן:</b> {present} • <b>חסרים/חסרות:</b>{" "}
-          {filteredNames.length - present}• <b>חסרים/חסרות:</b>{" "}
+          {filteredNames.length - present}• <b>פירוט:</b>{" "}
           {filteredNames
             .filter((personName) => !course.people![personName].present)
             .map((personName) => {
