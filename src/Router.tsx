@@ -16,6 +16,29 @@ import FilteredPeoplePage from "./pages/FilteredPeoplePage"
 import PersonPage from "./pages/PersonPage"
 import AssignmentsPage from "./pages/AssignmentsPage"
 import AssignmentPage from "./pages/AssignmentPage"
+import { useCourseLoading } from "./models"
+import { Loader } from "@mantine/core"
+
+const CourseLoader = () => {
+  const loading = useCourseLoading()
+
+  return (
+    <>
+      {loading && (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            marginTop: 10,
+          }}
+        >
+          <Loader size="sm" ml={5} />
+          <span>טוען את המידע העדכני...</span>
+        </div>
+      )}
+    </>
+  )
+}
 
 const Router = () => {
   const [currentUser, loading] = useAuthState(auth)
@@ -42,6 +65,7 @@ const Router = () => {
 
   return (
     <CourseProvider>
+      <CourseLoader />
       <Routes>
         <Route path="/" element={<Navigate to="/people" />} />
         <Route path="/people" element={<PeoplePage />} />

@@ -93,3 +93,7 @@ export const getAttributes = (course: Course) => {
     return a.localeCompare(b)
   })
 }
+
+export const CourseLoadingContext = createContext(false)
+
+export const useCourseLoading = () => useContext(CourseLoadingContext)
