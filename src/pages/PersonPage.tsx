@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom"
 import { getAttributes, useCourse } from "../models"
 import { ActionIcon, Switch, TextInput } from "@mantine/core"
 import React, { useEffect, useState } from "react"
-import FontAwesome from "../components/FontAwesome"
+import FontAwesome, { FontAwesomeIcon } from "../components/FontAwesome"
 import LinkButton from "../components/LinkButton"
 import DataTable from "../components/DataTable"
 import LinkAnchor from "../components/LinkAnchor"
@@ -75,6 +75,15 @@ const PersonPage = () => {
                   color={course.attributes![attributeName].color}
                   href={`/people/${attributeName}/${info.attributes[attributeName]}`}
                 >
+                  {course.attributes![attributeName].icon !== undefined && (
+                    <FontAwesome
+                      icon={
+                        course.attributes![attributeName]
+                          .icon as FontAwesomeIcon
+                      }
+                      props={{ style: { marginInlineEnd: 5 } }}
+                    />
+                  )}{" "}
                   {attributeName}: {info.attributes[attributeName]}
                 </LinkButton>
               )
@@ -91,6 +100,7 @@ const PersonPage = () => {
 
       <h2>מטלות</h2>
       <DataTable
+        hideIfEmpty
         tableName="מטלות"
         data={{
           head: ["שם", "תאריך הגשה", "הוגש"],

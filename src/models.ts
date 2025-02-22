@@ -22,10 +22,15 @@ export interface Assignment {
 export interface Attribute {
   icon?: string
   color?: string
-  // Whether there should be a page of everyone with the same attribute value (for instance, פלוגה and not תעודת זהות).
+  // Whether there should be a page of everyone with the same attribute value (for instance, צוות and not תעודת זהות).
   filterable?: boolean
   // Sorting value, larger is higher.
   priority?: number
+  /**
+   * Attributes which should be initialized automatically based on their (only) value matching the current value of this attribute.
+   * For example, the derivative attributes of צוות might be מחלקה.
+   */
+  derivativeAttributes?: string[]
 }
 
 export interface Course {

@@ -27,7 +27,11 @@ const FilteredPeoplePage = () => {
   ).length
   const attributes = Object.keys(course.attributes ?? {})
     .sort()
-    .filter((x) => x !== attribute)
+    .filter(
+      (x) =>
+        x !== attribute &&
+        !(course.attributes![attribute].derivativeAttributes ?? []).includes(x)
+    )
 
   return (
     <>
@@ -66,11 +70,12 @@ const FilteredPeoplePage = () => {
       <DataTable
         tableName="אנשים"
         data={{
-          head: ["שם", "נוכחות"].concat(attributes),
+          head: ["שם", "נוכחות", "סיבת היעדרות"].concat(attributes),
           body: filteredNames.map((personName) =>
             [
               personName,
               course.people![personName].present ? "נוכח/ת" : "חסר/ה",
+              course.people![personName].absenceReason ?? "",
             ].concat(
               attributes.map(
                 (attribute) => course.people![personName].attributes[attribute]

@@ -30,6 +30,7 @@ const DataTable = ({
   renderHead,
   disableSort,
   hideDownload,
+  hideIfEmpty,
 }: {
   tableName: string
   data: DataTableData
@@ -41,10 +42,15 @@ const DataTable = ({
   renderHead?: (columnName: string, columnIndex: number) => React.ReactNode
   disableSort?: boolean
   hideDownload?: boolean
+  hideIfEmpty?: boolean
 }) => {
   const [sortByColumn, setSortByColumn] = useState(0)
   const [reversed, setReversed] = useState(false)
   const [search, setSearch] = useState("")
+
+  if (hideIfEmpty && data.body.length === 0) {
+    return <></>
+  }
 
   const reverseValue = reversed ? -1 : 1
 

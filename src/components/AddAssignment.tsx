@@ -137,18 +137,27 @@ const AddAssignment = () => {
             course.assignments.push(assignment)
           }
 
-          setCourse(course, setLoading)?.then(() => {
-            setName("")
-            setDescription("")
-            setDue("")
-            setTarget("")
-            setAttribute("")
-            setKind("attribute")
-          })
+          setCourse(course, setLoading)?.then(() => setName(""))
         }}
       >
         {hasAssignment ? "עריכה" : "הוספה"}
       </Button>
+      {hasAssignment && (
+        <Button
+          mt="xs"
+          fullWidth
+          leftSection={<FontAwesome icon="trash" />}
+          color="red"
+          onClick={() => {
+            course.assignments = course.assignments?.filter(
+              (assignment) => assignment.name !== name
+            )
+            setCourse(course, setLoading, false)?.then(() => setName(""))
+          }}
+        >
+          מחיקה
+        </Button>
+      )}
     </Fieldset>
   )
 }

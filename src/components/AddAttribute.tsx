@@ -5,6 +5,7 @@ import {
   Button,
   Autocomplete,
   ColorInput,
+  MultiSelect,
 } from "@mantine/core"
 import { useEffect, useState } from "react"
 import { getAttributes, useCourse } from "../models"
@@ -17,10 +18,12 @@ const AddAttribute = () => {
   const [icon, setIcon] = useState("")
   const [color, setColor] = useState("")
   const [priority, setPriority] = useState("")
+  const [derivativeAttributes, setDerivativeAttributes] = useState<string[]>([])
   const [filterable, setFilterable] = useState(true)
   const [loading, setLoading] = useState(false)
 
   const hasName = course.attributes && course.attributes[name] !== undefined
+  const attributes = getAttributes(course)
 
   useEffect(() => {
     if (course.attributes && course.attributes[name]) {
@@ -28,11 +31,15 @@ const AddAttribute = () => {
       setPriority(course.attributes[name].priority?.toString() ?? "")
       setFilterable(course.attributes[name].filterable ?? false)
       setColor(course.attributes[name].color ?? "")
+      setDerivativeAttributes(
+        course.attributes[name].derivativeAttributes ?? []
+      )
     } else if (name === "") {
       setIcon("")
       setPriority("")
       setFilterable(true)
       setColor("")
+      setDerivativeAttributes([])
     }
   }, [name])
 
@@ -68,9 +75,16 @@ const AddAttribute = () => {
         value={priority}
         onChange={(e) => setPriority(e.currentTarget.value)}
       />
+      <MultiSelect
+        mt="xs"
+        label="מאפיינים נגזרים (למשל מחלקה יכולה להיגזר מצוות)"
+        data={attributes.filter((x) => x !== name)}
+        value={derivativeAttributes}
+        onChange={setDerivativeAttributes}
+      />
       <Checkbox
         mt="xs"
-        label="ניתן לסינון (לדוגמה פלוגה ולא תעודת זהות)"
+        label="ניתן לסינון (לדוגמה צוות ולא תעודת זהות)"
         checked={filterable}
         onChange={(e) => setFilterable(e.currentTarget.checked)}
       />
@@ -90,14 +104,9 @@ const AddAttribute = () => {
             color,
             priority: parseInt(priority, 10),
             filterable,
+            derivativeAttributes,
           }
-          setCourse(course, setLoading)?.then(() => {
-            setName("")
-            setIcon("")
-            setPriority("")
-            setFilterable(true)
-            setColor("")
-          })
+          setCourse(course, setLoading)?.then(() => setName(""))
         }}
       >
         {hasName ? "עריכה" : "הוספה"}
@@ -110,13 +119,7 @@ const AddAttribute = () => {
           color="red"
           onClick={() => {
             delete course.attributes![name]
-            setCourse(course, setLoading, false)?.then(() => {
-              setName("")
-              setIcon("")
-              setPriority("")
-              setFilterable(true)
-              setColor("")
-            })
+            setCourse(course, setLoading, false)?.then(() => setName(""))
           }}
         >
           מחיקה

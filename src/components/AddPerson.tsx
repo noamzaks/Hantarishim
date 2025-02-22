@@ -34,9 +34,31 @@ const AddPerson = () => {
           label={attribute}
           mt="xs"
           value={attributes[attribute] ?? ""}
-          onChange={(e) =>
-            setAttributes({ ...attributes, [attribute]: e.currentTarget.value })
-          }
+          onChange={(e) => {
+            const newAttributes = {
+              ...attributes,
+              [attribute]: e.currentTarget.value,
+            }
+            for (const derivativeAttribute of course.attributes![attribute]
+              .derivativeAttributes ?? []) {
+              let found = false
+              for (const person of Object.values(course.people ?? {})) {
+                if (
+                  person.attributes[attribute] === e.currentTarget.value &&
+                  person.attributes[derivativeAttribute]
+                ) {
+                  newAttributes[derivativeAttribute] =
+                    person.attributes[derivativeAttribute]
+                  found = true
+                  break
+                }
+              }
+              if (!found) {
+                delete newAttributes[derivativeAttribute]
+              }
+            }
+            setAttributes(newAttributes)
+          }}
           leftSection={
             course.attributes![attribute].icon ? (
               <FontAwesome
