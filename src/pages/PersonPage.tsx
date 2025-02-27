@@ -8,7 +8,7 @@ import DataTable from "../components/DataTable"
 import LinkAnchor from "../components/LinkAnchor"
 
 const PersonPage = () => {
-  const [course, setCourse] = useCourse()
+  const [course, setCourse, updateCourse] = useCourse()
   const params = useParams()
   const [loading, setLoading] = useState(false)
   const [submittingAssignment, setSubmittingAssignment] = useState(false)
@@ -37,8 +37,10 @@ const PersonPage = () => {
         disabled={loading}
         checked={info.present ?? false}
         onChange={(e) => {
-          info.present = e.currentTarget.checked
-          setCourse(course, setLoading)
+          updateCourse(
+            { [`people.${name}.present`]: e.currentTarget.checked },
+            setLoading
+          )
         }}
       />
       <TextInput
@@ -51,8 +53,10 @@ const PersonPage = () => {
           <ActionIcon
             loading={loading}
             onClick={() => {
-              info.absenceReason = absenceReason
-              setCourse(course, setLoading)
+              updateCourse(
+                { [`people.${name}.absenceReason`]: absenceReason },
+                setLoading
+              )
             }}
           >
             <FontAwesome icon="floppy-disk" />

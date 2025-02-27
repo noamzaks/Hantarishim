@@ -1,4 +1,4 @@
-import { doc, setDoc } from "firebase/firestore"
+import { doc, setDoc, updateDoc } from "firebase/firestore"
 import { createContext, useContext } from "react"
 import { auth, firestore } from "./firebase"
 import { emailToUsername } from "./lib/utilities"
@@ -51,7 +51,8 @@ export const useCourse = (): [
     d: Course,
     setLoading?: (l: boolean) => void,
     merge?: boolean
-  ) => Promise<void> | undefined
+  ) => Promise<void> | undefined,
+  (updates: any, setLoading?: (l: boolean) => void) => Promise<void> | undefined
 ] => [
   useContext(CourseContext),
   (d: Course, setLoading?: (l: boolean) => void, merge = true) => {
@@ -61,6 +62,19 @@ export const useCourse = (): [
         doc(firestore, `/users/${emailToUsername(auth.currentUser!.email!)}`),
         d,
         { merge }
+      )
+        .then(() => setLoading?.(false))
+        .catch(() => setLoading?.(false))
+    } catch (ignored) {
+      setLoading?.(false)
+    }
+  },
+  (updates: any, setLoading?: (l: boolean) => void) => {
+    setLoading?.(true)
+    try {
+      return updateDoc(
+        doc(firestore, `/users/${emailToUsername(auth.currentUser!.email!)}`),
+        updates
       )
         .then(() => setLoading?.(false))
         .catch(() => setLoading?.(false))
