@@ -6,6 +6,10 @@ import { useState } from "react"
 import DataTable from "../components/DataTable"
 import React from "react"
 import LinkAnchor from "../components/LinkAnchor"
+import Clock from "../components/Clock"
+import { showError, showSuccess } from "../lib/utilities"
+
+const ATTENDANCE_ID = "attendance"
 
 const FilteredPeoplePage = () => {
   const [resettingPresence, setResettingPresence] = useState(false)
@@ -38,24 +42,61 @@ const FilteredPeoplePage = () => {
 
   return (
     <div>
-      <h1>
+      <h1 style={{ display: "flex", alignItems: "center" }}>
         {attribute}: {attributeValue}
-        <Button
-          size="xs"
-          mr="xs"
-          leftSection={
-            focusedView ? (
-              <FontAwesome icon="pen" />
-            ) : (
-              <FontAwesome icon="note-sticky" />
-            )
-          }
-          onClick={() => setFocusedView((f) => !f)}
-        >
-          {focusedView ? "חזרה לעריכה" : "הצגת סיכום בלבד"}
-        </Button>
+        <Button.Group style={{ display: "inline-flex" }} mr="xs">
+          <Button
+            size="xs"
+            leftSection={
+              focusedView ? (
+                <FontAwesome icon="pen" />
+              ) : (
+                <FontAwesome icon="note-sticky" />
+              )
+            }
+            onClick={() => setFocusedView((f) => !f)}
+          >
+            {focusedView ? "חזרה לעריכה" : "הצגת סיכום בלבד"}
+          </Button>
+          {focusedView && (
+            <Button
+              size="xs"
+              leftSection={<FontAwesome icon="copy" />}
+              onClick={() => {
+                const content =
+                  `נוכחות ${attribute}: ${attributeValue}\n` +
+                  document.getElementById(ATTENDANCE_ID)!.innerText!
+                navigator.clipboard
+                  .writeText(content)
+                  .then(() =>
+                    showSuccess(
+                      "הנוכחות הועתקה בהצלחה!",
+                      "אפשר לשלוח אותה לכל מי שצריכ/ה."
+                    )
+                  )
+                  .catch(() =>
+                    showError(
+                      "לא ניתן להעתיק את הנוכחות!",
+                      "אולי יש בעיית הרשאות."
+                    )
+                  )
+              }}
+            >
+              העתקה
+            </Button>
+          )}
+        </Button.Group>
       </h1>
-      <p style={{ marginBottom: 5, fontSize: focusedView ? 22 : undefined }}>
+      <p
+        style={{ marginBottom: 5, fontSize: focusedView ? 22 : undefined }}
+        id={ATTENDANCE_ID}
+      >
+        {focusedView && (
+          <>
+            <b>שעה:</b> <Clock />
+            {splitter}
+          </>
+        )}
         <b>כאן:</b> {present} {splitter} <b>חסרים/חסרות:</b>{" "}
         {filteredNames.length - present}
         {splitter} <b>פירוט:</b>{" "}

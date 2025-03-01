@@ -15,6 +15,15 @@ export const setLocalStorage = (key: string, value = {}) => {
   )
 }
 
+export const showSuccess = (title: string, message: string) => {
+  notifications.show({
+    title,
+    message,
+    color: "green",
+    icon: <FontAwesome icon="check" />,
+  })
+}
+
 export const showError = (title: string, message: string) => {
   notifications.show({
     title,
