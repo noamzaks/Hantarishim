@@ -48,7 +48,7 @@ const FilteredPeoplePage = () => {
   const splitter = focusedView ? <br /> : "•"
 
   useEffect(() => {
-    const names: string[] = getLocalStorage("Selected")
+    const names: string[] = getLocalStorage("Selected", [])
     setSelectedRows(
       names.map((name) => filteredNames.indexOf(name)).filter((x) => x !== -1)
     )

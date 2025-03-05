@@ -13,7 +13,7 @@ const GroupPage = () => {
   const [loadingIncrement, setLoadingIncrement] = useState(false)
   const [course, setCourse, updateCourse] = useCourse()
 
-  const names: string[] = getLocalStorage("Selected")
+  const names: string[] = getLocalStorage("Selected", [])
 
   return (
     <>
