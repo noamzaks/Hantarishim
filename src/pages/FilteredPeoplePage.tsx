@@ -1,22 +1,29 @@
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useCourse } from "../models"
 import { Button, Loader, Switch } from "@mantine/core"
 import FontAwesome from "../components/FontAwesome"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import DataTable from "../components/DataTable"
 import React from "react"
 import LinkAnchor from "../components/LinkAnchor"
 import Clock from "../components/Clock"
-import { showError, showSuccess } from "../lib/utilities"
+import {
+  getLocalStorage,
+  setLocalStorage,
+  showError,
+  showSuccess,
+} from "../lib/utilities"
 
 const ATTENDANCE_ID = "attendance"
 
 const FilteredPeoplePage = () => {
   const [resettingPresence, setResettingPresence] = useState(false)
   const [focusedView, setFocusedView] = useState(false)
+  const [selectedRows, setSelectedRows] = useState<number[]>([])
   const [loading, setLoading] = useState(false)
   const [course, setCourse, updateCourse] = useCourse()
   const params = useParams()
+  const navigate = useNavigate()
 
   const attribute = params.attribute!
   const attributeValue = params.value!
@@ -39,6 +46,13 @@ const FilteredPeoplePage = () => {
     )
 
   const splitter = focusedView ? <br /> : "•"
+
+  useEffect(() => {
+    const names: string[] = getLocalStorage("Selected")
+    setSelectedRows(
+      names.map((name) => filteredNames.indexOf(name)).filter((x) => x !== -1)
+    )
+  }, [])
 
   return (
     <div>
@@ -123,19 +137,47 @@ const FilteredPeoplePage = () => {
           <div
             style={{ display: "flex", alignItems: "center", marginBottom: 10 }}
           >
-            <Button
-              variant="default"
-              loading={resettingPresence}
-              leftSection={<FontAwesome icon="rotate-left" />}
-              onClick={() => {
-                for (const name of filteredNames) {
-                  course.people![name].present = false
-                }
-                setCourse(course, setResettingPresence)
-              }}
-            >
-              איפוס נוכחות
-            </Button>
+            <Button.Group>
+              <Button
+                variant="default"
+                loading={resettingPresence}
+                leftSection={<FontAwesome icon="rotate-left" />}
+                onClick={() => {
+                  for (const name of filteredNames) {
+                    course.people![name].present = false
+                  }
+                  setCourse(course, setResettingPresence)
+                }}
+              >
+                איפוס נוכחות
+              </Button>
+              {selectedRows.length !== 0 && (
+                <>
+                  <Button
+                    variant="default"
+                    leftSection={<FontAwesome icon="user-group" />}
+                    onClick={() => {
+                      setLocalStorage(
+                        "Selected",
+                        selectedRows.map((rowIndex) => filteredNames[rowIndex])
+                      )
+                      navigate("/people/group")
+                    }}
+                  >
+                    עריכת מסומנים
+                  </Button>
+                  <Button
+                    variant="default"
+                    leftSection={<FontAwesome icon="rotate-left" />}
+                    onClick={() => {
+                      setSelectedRows([])
+                    }}
+                  >
+                    איפוס מסומנים
+                  </Button>
+                </>
+              )}
+            </Button.Group>
             {loading && (
               <>
                 <Loader size="sm" mx="xs" />
@@ -144,6 +186,9 @@ const FilteredPeoplePage = () => {
             )}
           </div>
           <DataTable
+            selectable
+            selectedRows={selectedRows}
+            setSelectedRows={setSelectedRows}
             tableName="אנשים"
             data={{
               head: ["שם", "נוכחות", "סיבת היעדרות"].concat(attributes),

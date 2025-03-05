@@ -24,6 +24,8 @@ export interface Attribute {
   color?: string
   // Whether there should be a page of everyone with the same attribute value (for instance, צוות and not תעודת זהות).
   filterable?: boolean
+  // Whether the attribute is a number
+  isNumber?: boolean
   // Sorting value, larger is higher.
   priority?: number
   /**

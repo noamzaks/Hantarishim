@@ -1,5 +1,6 @@
 import {
   Button,
+  Checkbox,
   Table,
   TableData,
   TextInput,
@@ -31,6 +32,9 @@ const DataTable = ({
   disableSort,
   hideDownload,
   hideIfEmpty,
+  selectable,
+  selectedRows,
+  setSelectedRows,
 }: {
   tableName: string
   data: DataTableData
@@ -43,6 +47,9 @@ const DataTable = ({
   disableSort?: boolean
   hideDownload?: boolean
   hideIfEmpty?: boolean
+  selectable?: boolean
+  selectedRows?: number[]
+  setSelectedRows?: React.Dispatch<React.SetStateAction<number[]>>
 }) => {
   const [sortByColumn, setSortByColumn] = useState(0)
   const [reversed, setReversed] = useState(false)
@@ -64,33 +71,34 @@ const DataTable = ({
     bodyIndices.push(i)
   }
 
-  const displayData: TableData = {
-    head: data.head.map(renderHead),
-    body: bodyIndices
-      .filter((i) =>
-        data.body[i].some(
-          (x, j) =>
-            x?.includes(search) ||
-            renderValue(i, data.head[j], x)?.toString().includes(search)
+  const sortedIndices = bodyIndices
+    .filter((i) =>
+      data.body[i].some(
+        (x, j) =>
+          x?.includes(search) ||
+          renderValue(i, data.head[j], x)?.toString().includes(search)
+      )
+    )
+    .sort((a, b) => {
+      if (disableSort) {
+        return 1
+      }
+
+      return (
+        reverseValue *
+        (data.body[a][sortByColumn] ?? "").localeCompare(
+          data.body[b][sortByColumn] ?? ""
         )
       )
-      .sort((a, b) => {
-        if (disableSort) {
-          return 1
-        }
+    })
 
-        return (
-          reverseValue *
-          (data.body[a][sortByColumn] ?? "").localeCompare(
-            data.body[b][sortByColumn] ?? ""
-          )
-        )
-      })
-      .map((rowIndex) =>
-        data.body[rowIndex].map((value, columnIndex) =>
-          renderValue(rowIndex, data.head[columnIndex], value)
-        )
-      ),
+  const displayData: TableData = {
+    head: data.head.map(renderHead),
+    body: sortedIndices.map((rowIndex) =>
+      data.body[rowIndex].map((value, columnIndex) =>
+        renderValue(rowIndex, data.head[columnIndex], value)
+      )
+    ),
   }
 
   return (
@@ -108,6 +116,7 @@ const DataTable = ({
         <Table>
           <Table.Thead>
             <Table.Tr>
+              {selectable && <Table.Th />}
               {displayData.head?.map((element, columnIndex) => (
                 <Table.Th key={columnIndex} style={{ padding: 0 }}>
                   <UnstyledButton
@@ -143,13 +152,35 @@ const DataTable = ({
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
-            {displayData.body?.map((row, rowIndex) => (
-              <Table.Tr key={rowIndex}>
-                {row.map((value, valueIndex) => (
-                  <Table.Td key={valueIndex}>{value}</Table.Td>
-                ))}
-              </Table.Tr>
-            ))}
+            {displayData.body?.map((row, rowIndex) => {
+              const realIndex = sortedIndices.indexOf(rowIndex)
+
+              return (
+                <Table.Tr key={rowIndex}>
+                  {selectable && (
+                    <Table.Td>
+                      <Checkbox
+                        checked={selectedRows?.includes(realIndex)}
+                        onChange={(e) => {
+                          if (setSelectedRows) {
+                            if (e.currentTarget.checked) {
+                              setSelectedRows((s) => [...s, realIndex])
+                            } else {
+                              setSelectedRows((s) =>
+                                s.filter((x) => x !== realIndex)
+                              )
+                            }
+                          }
+                        }}
+                      />
+                    </Table.Td>
+                  )}
+                  {row.map((value, valueIndex) => (
+                    <Table.Td key={valueIndex}>{value}</Table.Td>
+                  ))}
+                </Table.Tr>
+              )
+            })}
           </Table.Tbody>
         </Table>
       </div>

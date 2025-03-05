@@ -18,6 +18,7 @@ import AssignmentsPage from "./pages/AssignmentsPage"
 import AssignmentPage from "./pages/AssignmentPage"
 import { useCourseLoading } from "./models"
 import { Loader } from "@mantine/core"
+import GroupPage from "./pages/GroupPage"
 
 const CourseLoader = () => {
   const loading = useCourseLoading()
@@ -69,6 +70,7 @@ const Router = () => {
       <Routes>
         <Route path="/" element={<Navigate to="/people" />} />
         <Route path="/people" element={<PeoplePage />} />
+        <Route path="/people/group" element={<GroupPage />} />
         <Route path="/people/:name" element={<PersonPage />} />
         <Route
           path="/people/:attribute/:value"

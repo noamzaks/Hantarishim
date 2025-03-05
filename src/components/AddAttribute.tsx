@@ -20,6 +20,7 @@ const AddAttribute = () => {
   const [priority, setPriority] = useState("")
   const [derivativeAttributes, setDerivativeAttributes] = useState<string[]>([])
   const [filterable, setFilterable] = useState(true)
+  const [isNumber, setIsNumber] = useState(false)
   const [loading, setLoading] = useState(false)
 
   const hasName = course.attributes && course.attributes[name] !== undefined
@@ -30,6 +31,7 @@ const AddAttribute = () => {
       setIcon(course.attributes[name].icon ?? "")
       setPriority(course.attributes[name].priority?.toString() ?? "")
       setFilterable(course.attributes[name].filterable ?? false)
+      setIsNumber(course.attributes[name].isNumber ?? false)
       setColor(course.attributes[name].color ?? "")
       setDerivativeAttributes(
         course.attributes[name].derivativeAttributes ?? []
@@ -38,6 +40,7 @@ const AddAttribute = () => {
       setIcon("")
       setPriority("")
       setFilterable(true)
+      setIsNumber(false)
       setColor("")
       setDerivativeAttributes([])
     }
@@ -84,6 +87,12 @@ const AddAttribute = () => {
       />
       <Checkbox
         mt="xs"
+        label="מספרי (לדוגמה מספר התנדבויות)"
+        checked={isNumber}
+        onChange={(e) => setIsNumber(e.currentTarget.checked)}
+      />
+      <Checkbox
+        mt="xs"
         label="ניתן לסינון (לדוגמה צוות ולא תעודת זהות)"
         checked={filterable}
         onChange={(e) => setFilterable(e.currentTarget.checked)}
@@ -104,6 +113,7 @@ const AddAttribute = () => {
             color,
             priority: parseInt(priority, 10),
             filterable,
+            isNumber,
             derivativeAttributes,
           }
           setCourse(course, setLoading)?.then(() => setName(""))

@@ -34,6 +34,7 @@ const AddPerson = () => {
           label={attribute}
           mt="xs"
           value={attributes[attribute] ?? ""}
+          type={course.attributes![attribute].isNumber ? "number" : undefined}
           onChange={(e) => {
             const newAttributes = {
               ...attributes,
