@@ -34,7 +34,7 @@ const Header = ({
       </h3>
       {loading && (
         <>
-          <Loader size="sm" ml="xs" />
+          <Loader size="sm" ml={5} />
           <span>מתחבר...</span>
         </>
       )}

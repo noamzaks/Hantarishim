@@ -113,24 +113,27 @@ const FilteredPeoplePage = () => {
         )}
         <b>כאן:</b> {present} {splitter} <b>חסרים/חסרות:</b>{" "}
         {filteredNames.length - present}
-        {splitter} <b>פירוט:</b>{" "}
-        {filteredNames
-          .filter((personName) => !course.people![personName].present)
-          .sort((a, b) => {
-            const infoA = course.people![a]
-            const infoB = course.people![b]
-            return (infoB.absenceReason ?? "").localeCompare(
-              infoA.absenceReason ?? "",
-            )
-          })
-          .map((personName) => {
-            const info = course.people![personName]
-            if (info.absenceReason) {
-              return `${personName} (${info.absenceReason})`
-            }
-            return personName
-          })
-          .join(", ")}
+        {splitter} <b>פירוט:</b>
+        {focusedView ? <br /> : " "}
+        <span style={{ whiteSpace: "pre" }}>
+          {filteredNames
+            .filter((personName) => !course.people![personName].present)
+            .sort((a, b) => {
+              const infoA = course.people![a]
+              const infoB = course.people![b]
+              return (infoB.absenceReason ?? "").localeCompare(
+                infoA.absenceReason ?? "",
+              )
+            })
+            .map((personName) => {
+              const info = course.people![personName]
+              if (info.absenceReason) {
+                return `${personName} (${info.absenceReason})`
+              }
+              return personName
+            })
+            .join(focusedView ? "\n" : ", ")}
+        </span>
       </p>
       {!focusedView && (
         <>
