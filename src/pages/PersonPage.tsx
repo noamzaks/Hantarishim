@@ -19,9 +19,13 @@ const PersonPage = () => {
 
   const assignments = (course.assignments ?? []).filter(
     (assignment) =>
-      (assignment.kind === "person" && assignment.target === name) ||
+      (assignment.kind === "person" && assignment.targets.includes(name)) ||
       (assignment.kind === "attribute" &&
-        info.attributes[assignment.attribute!] === assignment.target)
+        assignment.targets.includes(info.attributes[assignment.attribute!])) ||
+      (assignment.kind === "group" &&
+        assignment.targets.some((target) =>
+          (course.groups ?? {})[target]?.includes(name),
+        )),
   )
 
   useEffect(() => {
@@ -39,7 +43,7 @@ const PersonPage = () => {
         onChange={(e) => {
           updateCourse(
             { [`people.${name}.present`]: e.currentTarget.checked },
-            setLoading
+            setLoading,
           )
         }}
       />
@@ -55,7 +59,7 @@ const PersonPage = () => {
             onClick={() => {
               updateCourse(
                 { [`people.${name}.absenceReason`]: absenceReason },
-                setLoading
+                setLoading,
               )
             }}
           >
@@ -135,7 +139,7 @@ const PersonPage = () => {
                     info.submitted.push(assignments[rowIndex].name)
                   } else {
                     info.submitted = info.submitted.filter(
-                      (a) => a !== assignments[rowIndex].name
+                      (a) => a !== assignments[rowIndex].name,
                     )
                   }
                   setCourse(course, setSubmittingAssignment)

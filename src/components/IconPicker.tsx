@@ -2,7 +2,7 @@ import { TextInput, TextInputProps } from "@mantine/core"
 import FontAwesome, { FontAwesomeIcon } from "./FontAwesome"
 
 const IconPicker = (
-  props: TextInputProps & { icon: string; setIcon: (icon: string) => void }
+  props: TextInputProps & { icon: string; setIcon: (icon: string) => void },
 ) => {
   return (
     <TextInput

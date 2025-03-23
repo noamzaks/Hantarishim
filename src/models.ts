@@ -11,8 +11,8 @@ export interface Person {
 }
 
 export interface Assignment {
-  kind: "person" | "attribute"
-  target: string
+  kind: "person" | "attribute" | "group"
+  targets: string[]
   name: string
   description: string
   due: string
@@ -43,6 +43,9 @@ export interface Course {
   attributes?: {
     [name: string]: Attribute
   }
+  groups?: {
+    [name: string]: string[]
+  }
 }
 
 export const CourseContext = createContext<Course>({})
@@ -52,9 +55,12 @@ export const useCourse = (): [
   (
     d: Course,
     setLoading?: (l: boolean) => void,
-    merge?: boolean
+    merge?: boolean,
   ) => Promise<void> | undefined,
-  (updates: any, setLoading?: (l: boolean) => void) => Promise<void> | undefined
+  (
+    updates: any,
+    setLoading?: (l: boolean) => void,
+  ) => Promise<void> | undefined,
 ] => [
   useContext(CourseContext),
   (d: Course, setLoading?: (l: boolean) => void, merge = true) => {
@@ -63,7 +69,7 @@ export const useCourse = (): [
       return setDoc(
         doc(firestore, `/users/${emailToUsername(auth.currentUser!.email!)}`),
         d,
-        { merge }
+        { merge },
       )
         .then(() => setLoading?.(false))
         .catch(() => setLoading?.(false))
@@ -76,7 +82,7 @@ export const useCourse = (): [
     try {
       return updateDoc(
         doc(firestore, `/users/${emailToUsername(auth.currentUser!.email!)}`),
-        updates
+        updates,
       )
         .then(() => setLoading?.(false))
         .catch(() => setLoading?.(false))

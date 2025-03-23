@@ -16,10 +16,16 @@ const AssignmentPage = () => {
   const people = Object.keys(course.people ?? {})
     .filter(
       assignment.kind === "person"
-        ? (personName) => personName === assignment.target
-        : (personName) =>
-            course.people![personName].attributes[assignment.attribute!] ===
-            assignment.target
+        ? (personName) => assignment.targets.includes(personName)
+        : assignment.kind === "attribute"
+          ? (personName) =>
+              assignment.targets.includes(
+                course.people![personName].attributes[assignment.attribute!],
+              )
+          : (personName) =>
+              assignment.targets.some((target) =>
+                (course.groups ?? {})[target]?.includes(personName),
+              ),
     )
     .sort()
 
@@ -33,7 +39,7 @@ const AssignmentPage = () => {
         <b>תאריך הגשה:</b> {assignment.due}
       </p>
       <p>
-        <b>יעד:</b> {assignment.target}
+        <b>יעדים:</b> {assignment.targets}
         {assignment.attribute ? ` (${assignment.attribute})` : ""}
       </p>
 
@@ -68,7 +74,7 @@ const AssignmentPage = () => {
                 onChange={(e) => {
                   if (e.currentTarget.checked) {
                     course.people![people[rowIndex]].submitted.push(
-                      assignmentName
+                      assignmentName,
                     )
                   } else {
                     course.people![people[rowIndex]].submitted = course.people![

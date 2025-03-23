@@ -21,6 +21,7 @@ const App = () => {
           <Header
             links={[
               { url: "/people", title: "אנשים", icon: "user-group" },
+              { url: "/groups", title: "קבוצות", icon: "users" },
               { url: "/assignments", title: "מטלות", icon: "file-lines" },
               { url: "/settings", title: "הגדרות", icon: "gear" },
             ]}

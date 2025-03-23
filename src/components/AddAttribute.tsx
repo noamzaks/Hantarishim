@@ -34,7 +34,7 @@ const AddAttribute = () => {
       setIsNumber(course.attributes[name].isNumber ?? false)
       setColor(course.attributes[name].color ?? "")
       setDerivativeAttributes(
-        course.attributes[name].derivativeAttributes ?? []
+        course.attributes[name].derivativeAttributes ?? [],
       )
     } else if (name === "") {
       setIcon("")

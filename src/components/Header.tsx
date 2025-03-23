@@ -1,4 +1,4 @@
-import { ActionIcon, Tooltip } from "@mantine/core"
+import { ActionIcon, Loader, Tooltip } from "@mantine/core"
 import { useNavigate } from "react-router-dom"
 import FontAwesome, { FontAwesomeIcon } from "./FontAwesome"
 import { useAuthState } from "react-firebase-hooks/auth"
@@ -32,6 +32,12 @@ const Header = ({
       >
         חנתרישים
       </h3>
+      {loading && (
+        <>
+          <Loader size="sm" ml="xs" />
+          <span>מתחבר...</span>
+        </>
+      )}
       {!loading && currentUser !== undefined && currentUser !== null && (
         <>
           {links.map((link, linkIndex) => (

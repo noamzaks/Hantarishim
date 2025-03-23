@@ -30,19 +30,19 @@ const FilteredPeoplePage = () => {
   const filteredNames = Object.keys(course.people ?? {})
     .filter(
       (personName) =>
-        course.people![personName].attributes[attribute] === attributeValue
+        course.people![personName].attributes[attribute] === attributeValue,
     )
     .sort()
 
   const present = filteredNames.filter(
-    (personName) => course.people![personName].present
+    (personName) => course.people![personName].present,
   ).length
   const attributes = Object.keys(course.attributes ?? {})
     .sort()
     .filter(
       (x) =>
         x !== attribute &&
-        !(course.attributes![attribute].derivativeAttributes ?? []).includes(x)
+        !(course.attributes![attribute].derivativeAttributes ?? []).includes(x),
     )
 
   const splitter = focusedView ? <br /> : "•"
@@ -50,7 +50,7 @@ const FilteredPeoplePage = () => {
   useEffect(() => {
     const names: string[] = getLocalStorage("Selected", [])
     setSelectedRows(
-      names.map((name) => filteredNames.indexOf(name)).filter((x) => x !== -1)
+      names.map((name) => filteredNames.indexOf(name)).filter((x) => x !== -1),
     )
   }, [])
 
@@ -85,14 +85,14 @@ const FilteredPeoplePage = () => {
                   .then(() =>
                     showSuccess(
                       "הנוכחות הועתקה בהצלחה!",
-                      "אפשר לשלוח אותה לכל מי שצריכ/ה."
-                    )
+                      "אפשר לשלוח אותה לכל מי שצריכ/ה.",
+                    ),
                   )
                   .catch(() =>
                     showError(
                       "לא ניתן להעתיק את הנוכחות!",
-                      "אולי יש בעיית הרשאות."
-                    )
+                      "אולי יש בעיית הרשאות.",
+                    ),
                   )
               }}
             >
@@ -120,7 +120,7 @@ const FilteredPeoplePage = () => {
             const infoA = course.people![a]
             const infoB = course.people![b]
             return (infoB.absenceReason ?? "").localeCompare(
-              infoA.absenceReason ?? ""
+              infoA.absenceReason ?? "",
             )
           })
           .map((personName) => {
@@ -159,7 +159,7 @@ const FilteredPeoplePage = () => {
                     onClick={() => {
                       setLocalStorage(
                         "Selected",
-                        selectedRows.map((rowIndex) => filteredNames[rowIndex])
+                        selectedRows.map((rowIndex) => filteredNames[rowIndex]),
                       )
                       navigate("/people/group")
                     }}
@@ -201,9 +201,9 @@ const FilteredPeoplePage = () => {
                 ].concat(
                   attributes.map(
                     (attribute) =>
-                      course.people![personName].attributes[attribute]
-                  )
-                )
+                      course.people![personName].attributes[attribute],
+                  ),
+                ),
               ),
             }}
             renderValue={(rowIndex, columnName, value) => {
@@ -232,7 +232,7 @@ const FilteredPeoplePage = () => {
                           [`people.${filteredNames[rowIndex]}.present`]:
                             e.currentTarget.checked,
                         },
-                        setLoading
+                        setLoading,
                       )
                     }}
                   />

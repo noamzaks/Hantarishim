@@ -41,7 +41,7 @@ const DataTable = ({
   renderValue?: (
     rowIndex: number,
     columnName: string,
-    value: string
+    value: string,
   ) => React.ReactNode
   renderHead?: (columnName: string, columnIndex: number) => React.ReactNode
   disableSort?: boolean
@@ -76,8 +76,8 @@ const DataTable = ({
       data.body[i].some(
         (x, j) =>
           x?.includes(search) ||
-          renderValue(i, data.head[j], x)?.toString().includes(search)
-      )
+          renderValue(i, data.head[j], x)?.toString().includes(search),
+      ),
     )
     .sort((a, b) => {
       if (disableSort) {
@@ -87,7 +87,7 @@ const DataTable = ({
       return (
         reverseValue *
         (data.body[a][sortByColumn] ?? "").localeCompare(
-          data.body[b][sortByColumn] ?? ""
+          data.body[b][sortByColumn] ?? "",
         )
       )
     })
@@ -96,8 +96,8 @@ const DataTable = ({
     head: data.head.map(renderHead),
     body: sortedIndices.map((rowIndex) =>
       data.body[rowIndex].map((value, columnIndex) =>
-        renderValue(rowIndex, data.head[columnIndex], value)
-      )
+        renderValue(rowIndex, data.head[columnIndex], value),
+      ),
     ),
   }
 
@@ -167,7 +167,7 @@ const DataTable = ({
                               setSelectedRows((s) => [...s, realIndex])
                             } else {
                               setSelectedRows((s) =>
-                                s.filter((x) => x !== realIndex)
+                                s.filter((x) => x !== realIndex),
                               )
                             }
                           }

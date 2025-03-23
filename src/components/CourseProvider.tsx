@@ -5,7 +5,7 @@ import { emailToUsername } from "../lib/utilities"
 
 const CourseProvider = ({ children }: { children: React.ReactNode }) => {
   const { data: course, loading } = useDocument(
-    `/users/${emailToUsername(auth.currentUser!.email!)}`
+    `/users/${emailToUsername(auth.currentUser!.email!)}`,
   )
 
   return (

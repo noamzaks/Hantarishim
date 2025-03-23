@@ -11,7 +11,7 @@ export const getLocalStorage = (key: string, defaultValue = {}) => {
 export const setLocalStorage = (key: string, value = {}) => {
   localStorage.setItem(key, JSON.stringify(value))
   window.dispatchEvent(
-    new StorageEvent("storage", { key, newValue: JSON.stringify(value) })
+    new StorageEvent("storage", { key, newValue: JSON.stringify(value) }),
   )
 }
 
@@ -36,7 +36,7 @@ export const showError = (title: string, message: string) => {
 export const downloadFile = (
   filename: string,
   mimeType: string,
-  contents: string
+  contents: string,
 ) => {
   const a = document.createElement("a")
   a.style.display = "none"

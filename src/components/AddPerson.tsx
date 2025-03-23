@@ -13,7 +13,7 @@ const AddPerson = () => {
 
   useEffect(() => {
     if (hasPerson) {
-      setAttributes(course.people![name].attributes)
+      setAttributes({ ...course.people![name].attributes })
     } else if (name === "") {
       setAttributes({})
     }

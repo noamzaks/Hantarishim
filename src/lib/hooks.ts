@@ -12,7 +12,7 @@ export const useLocalStorage = <T>({
   defaultValue?: any
 }): [T, React.Dispatch<React.SetStateAction<T>>] => {
   const [value, setValue] = useState<T>(
-    getLocalStorage(key, defaultValue ?? null)
+    getLocalStorage(key, defaultValue ?? null),
   )
 
   useEffect(() => {
@@ -46,7 +46,7 @@ export const useLocalStorage = <T>({
         new StorageEvent("storage", {
           key,
           newValue: JSON.stringify(newValue),
-        })
+        }),
       )
     }
   }

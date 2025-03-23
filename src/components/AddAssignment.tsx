@@ -3,6 +3,7 @@ import {
   Button,
   Fieldset,
   Select,
+  TagsInput,
   TextInput,
 } from "@mantine/core"
 import { Assignment, getAttributes, useCourse } from "../models"
@@ -14,15 +15,17 @@ const AddAssignment = () => {
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
   const [due, setDue] = useState("")
-  const [kind, setKind] = useState<"person" | "attribute">("attribute")
+  const [kind, setKind] = useState<"person" | "attribute" | "group">(
+    "attribute",
+  )
   const [attribute, setAttribute] = useState("")
-  const [target, setTarget] = useState("")
+  const [targets, setTargets] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
 
-  let targets: string[] = []
+  let targetOptions: string[] = []
 
   if (kind === "person") {
-    targets = Object.keys(course.people ?? {}).sort()
+    targetOptions = Object.keys(course.people ?? {}).sort()
   } else if (kind === "attribute") {
     const set = new Set<string>()
     for (const person of Object.values(course.people ?? {})) {
@@ -30,28 +33,30 @@ const AddAssignment = () => {
         set.add(person.attributes[attribute])
       }
     }
-    targets = [...set]
+    targetOptions = [...set]
+  } else if (kind === "group") {
+    targetOptions = Object.keys(course.groups ?? {}).sort()
   }
 
   const hasAssignment = course.assignments?.some(
-    (assignment) => assignment.name === name
+    (assignment) => assignment.name === name,
   )
 
   useEffect(() => {
     if (hasAssignment) {
       const assignment = course.assignments!.find(
-        (assignment) => assignment.name === name
+        (assignment) => assignment.name === name,
       )!
       setDescription(assignment.description)
       setDue(assignment.due)
       setKind(assignment.kind)
-      setTarget(assignment.target)
+      setTargets(assignment.targets)
       setAttribute(assignment.attribute ?? "")
     } else if (name === "") {
       setDescription("")
       setDue("")
       setKind("attribute")
-      setTarget("")
+      setTargets([])
       setAttribute("")
     }
   }, [name])
@@ -82,10 +87,13 @@ const AddAssignment = () => {
         label="סוג היעד"
         data={[
           { label: "שם", value: "person" },
+          { label: "קבוצה", value: "group" },
           { label: "מאפיין", value: "attribute" },
         ]}
         value={kind}
-        onChange={(v) => setKind((v ?? "attribute") as "person" | "attribute")}
+        onChange={(v) =>
+          setKind((v ?? "attribute") as "person" | "attribute" | "group")
+        }
       />
       {kind === "attribute" && (
         <Autocomplete
@@ -96,12 +104,12 @@ const AddAssignment = () => {
           onChange={setAttribute}
         />
       )}
-      <Autocomplete
+      <TagsInput
         mt="xs"
-        label="יעד"
-        value={target}
-        onChange={setTarget}
-        data={targets}
+        label="יעדים"
+        value={targets}
+        onChange={(t) => setTargets(t.filter((x) => targetOptions.includes(x)))}
+        data={targetOptions}
       />
       <Button
         mt="xs"
@@ -121,7 +129,7 @@ const AddAssignment = () => {
 
           const assignment: Assignment = {
             kind,
-            target,
+            targets,
             name,
             description,
             due,
@@ -129,7 +137,7 @@ const AddAssignment = () => {
           }
 
           const assignmentIndex = course.assignments.findIndex(
-            (s) => s.name === name
+            (s) => s.name === name,
           )
           if (assignmentIndex !== -1) {
             course.assignments[assignmentIndex] = assignment
@@ -150,7 +158,7 @@ const AddAssignment = () => {
           color="red"
           onClick={() => {
             course.assignments = course.assignments?.filter(
-              (assignment) => assignment.name !== name
+              (assignment) => assignment.name !== name,
             )
             setCourse(course, setLoading, false)?.then(() => setName(""))
           }}
