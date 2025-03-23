@@ -171,6 +171,7 @@ const FilteredPeoplePage = () => {
                     leftSection={<FontAwesome icon="rotate-left" />}
                     onClick={() => {
                       setSelectedRows([])
+                      setLocalStorage("Selected", [])
                     }}
                   >
                     איפוס מסומנים

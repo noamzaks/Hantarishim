@@ -153,7 +153,7 @@ const DataTable = ({
           </Table.Thead>
           <Table.Tbody>
             {displayData.body?.map((row, rowIndex) => {
-              const realIndex = sortedIndices.indexOf(rowIndex)
+              const realIndex = sortedIndices[rowIndex]
 
               return (
                 <Table.Tr key={rowIndex}>
