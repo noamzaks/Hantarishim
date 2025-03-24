@@ -1,15 +1,24 @@
 import { useParams } from "react-router-dom"
-import { useCourse } from "../models"
+import { getAttributes, useCourse } from "../models"
 import DataTable from "../components/DataTable"
-import { Switch } from "@mantine/core"
+import { Autocomplete, Fieldset, Select, Switch } from "@mantine/core"
 import React, { useState } from "react"
 import LinkAnchor from "../components/LinkAnchor"
 import { arrayRemove, arrayUnion } from "firebase/firestore"
+import { useLocalStorage } from "../lib/hooks"
 
 const AssignmentPage = () => {
   const [course, _, updateCourse] = useCourse()
   const params = useParams()
   const [loading, setLoading] = useState(false)
+  const [filterAttribute, setFilterAttribute] = useLocalStorage<string | null>({
+    key: "Filter Attribute",
+    defaultValue: null,
+  })
+  const [filterValue, setFilterValue] = useLocalStorage<string | undefined>({
+    key: "Filter Value",
+    defaultValue: undefined,
+  })
 
   const assignmentName = params.assignment!
   const assignment = course.assignments!.find((a) => a.name === assignmentName)!
@@ -29,6 +38,12 @@ const AssignmentPage = () => {
               ),
     )
     .sort()
+  const filteredPeople = filterAttribute
+    ? people.filter(
+        (person) =>
+          course.people![person].attributes[filterAttribute] === filterValue,
+      )
+    : people
 
   return (
     <>
@@ -43,13 +58,42 @@ const AssignmentPage = () => {
         <b>יעדים:</b> {assignment.targets}
         {assignment.attribute ? ` (${assignment.attribute})` : ""}
       </p>
+      <Fieldset legend="פילטור" display="flex" my="xs">
+        <Select
+          clearable
+          data={getAttributes(course).filter(
+            (attribute) => course.attributes![attribute].filterable,
+          )}
+          w="47.5%"
+          ml="5%"
+          value={filterAttribute}
+          onChange={setFilterAttribute}
+        />
+        <Autocomplete
+          w="47.5%"
+          data={
+            filterAttribute
+              ? [
+                  ...new Set(
+                    people.map(
+                      (person) =>
+                        course.people![person].attributes[filterAttribute],
+                    ),
+                  ),
+                ].sort()
+              : []
+          }
+          value={filterValue}
+          onChange={setFilterValue}
+        />
+      </Fieldset>
 
       <h2>אנשים</h2>
       <DataTable
         tableName={assignmentName}
         data={{
           head: ["שם", "הוגש"],
-          body: people.map((personName) => [
+          body: filteredPeople.map((personName) => [
             personName,
             course.people![personName].submitted.includes(assignmentName)
               ? "כן"
