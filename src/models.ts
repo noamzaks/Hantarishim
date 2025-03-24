@@ -19,6 +19,22 @@ export interface Assignment {
   attribute?: string
 }
 
+export type FormQuestionKind = "scale" | "text"
+
+export interface FormQuestion {
+  prompt?: string
+  kind?: FormQuestionKind
+  required?: boolean
+}
+
+export interface Form {
+  kind: "person" | "attribute" | "group"
+  targets: string[]
+  name: string
+  attribute?: string
+  questions?: FormQuestion[]
+}
+
 export interface Attribute {
   icon?: string
   color?: string
@@ -40,6 +56,7 @@ export interface Course {
     [name: string]: Person
   }
   assignments?: Assignment[]
+  forms?: Form[]
   attributes?: {
     [name: string]: Attribute
   }

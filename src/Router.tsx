@@ -21,6 +21,8 @@ import { Loader } from "@mantine/core"
 import SelectedPage from "./pages/SelectedPage"
 import GroupsPage from "./pages/GroupsPage"
 import GroupPage from "./pages/GroupPage"
+import FormsPage from "./pages/FormsPage"
+import FormPage from "./pages/FormPage"
 
 const CourseLoader = () => {
   const loading = useCourseLoading()
@@ -82,6 +84,8 @@ const Router = () => {
         <Route path="/assignments/:assignment" element={<AssignmentPage />} />
         <Route path="/groups" element={<GroupsPage />} />
         <Route path="/groups/:group" element={<GroupPage />} />
+        <Route path="/forms" element={<FormsPage />} />
+        <Route path="/forms/:form" element={<FormPage />} />
         <Route path="/settings" element={<SettingsPage />} />
       </Routes>
     </CourseProvider>

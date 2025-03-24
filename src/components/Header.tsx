@@ -42,7 +42,7 @@ const Header = ({
       )}
       {!loading && currentUser !== undefined && currentUser !== null && (
         <>
-          <span style={{ overflow: "auto", display: "flex" }}>
+          <span style={{ overflowX: "auto", display: "flex" }}>
             {(me === ""
               ? links
               : [
