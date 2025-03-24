@@ -4,6 +4,7 @@ import FontAwesome, { FontAwesomeIcon } from "./FontAwesome"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { auth } from "../firebase"
 import { signOut } from "firebase/auth"
+import { useLocalStorage } from "../lib/hooks"
 
 const Header = ({
   links,
@@ -12,6 +13,7 @@ const Header = ({
 }) => {
   const navigate = useNavigate()
   const [currentUser, loading] = useAuthState(auth)
+  const [me] = useLocalStorage<string>({ key: "Me", defaultValue: "" })
 
   return (
     <header
@@ -40,25 +42,38 @@ const Header = ({
       )}
       {!loading && currentUser !== undefined && currentUser !== null && (
         <>
-          {links.map((link, linkIndex) => (
-            <Tooltip label={link.title} key={linkIndex}>
-              <ActionIcon
-                mx={5}
-                size="lg"
-                onClick={(e) => {
-                  e.preventDefault()
-                  navigate(link.url)
-                }}
-                component="a"
-                href={link.url}
-              >
-                <FontAwesome icon={link.icon} />
-              </ActionIcon>
-            </Tooltip>
-          ))}
+          <span style={{ overflow: "auto", display: "flex" }}>
+            {(me === ""
+              ? links
+              : [
+                  {
+                    title: "דף אישי",
+                    url: `/people/${me}`,
+                    icon: "home" as FontAwesomeIcon,
+                  },
+                  ...links,
+                ]
+            ).map((link, linkIndex) => (
+              <Tooltip label={link.title} key={linkIndex}>
+                <ActionIcon
+                  mx={5}
+                  size="lg"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    navigate(link.url)
+                  }}
+                  component="a"
+                  href={link.url}
+                >
+                  <FontAwesome icon={link.icon} />
+                </ActionIcon>
+              </Tooltip>
+            ))}
+          </span>
+
           <span style={{ flexGrow: 1 }} />
           <Tooltip label="התנתקות">
-            <ActionIcon size="lg" mr={5} onClick={() => signOut(auth)}>
+            <ActionIcon size="lg" mr={10} onClick={() => signOut(auth)}>
               <FontAwesome icon="right-from-bracket" />
             </ActionIcon>
           </Tooltip>
