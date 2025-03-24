@@ -4,9 +4,10 @@ import DataTable from "../components/DataTable"
 import { Switch } from "@mantine/core"
 import React, { useState } from "react"
 import LinkAnchor from "../components/LinkAnchor"
+import { arrayRemove, arrayUnion } from "firebase/firestore"
 
 const AssignmentPage = () => {
-  const [course, setCourse] = useCourse()
+  const [course, _, updateCourse] = useCourse()
   const params = useParams()
   const [loading, setLoading] = useState(false)
 
@@ -71,18 +72,17 @@ const AssignmentPage = () => {
                 label={value}
                 checked={value === "כן"}
                 disabled={loading}
-                onChange={(e) => {
-                  if (e.currentTarget.checked) {
-                    course.people![people[rowIndex]].submitted.push(
-                      assignmentName,
-                    )
-                  } else {
-                    course.people![people[rowIndex]].submitted = course.people![
-                      people[rowIndex]
-                    ].submitted.filter((a) => a !== assignmentName)
-                  }
-                  setCourse(course, setLoading)
-                }}
+                onChange={(e) =>
+                  updateCourse(
+                    {
+                      [`people.${people[rowIndex]}.submitted`]: e.currentTarget
+                        .checked
+                        ? arrayUnion(assignmentName)
+                        : arrayRemove(assignmentName),
+                    },
+                    setLoading,
+                  )
+                }
               />
             )
           }

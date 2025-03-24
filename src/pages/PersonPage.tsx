@@ -6,9 +6,10 @@ import FontAwesome, { FontAwesomeIcon } from "../components/FontAwesome"
 import LinkButton from "../components/LinkButton"
 import DataTable from "../components/DataTable"
 import LinkAnchor from "../components/LinkAnchor"
+import { arrayRemove, arrayUnion } from "firebase/firestore"
 
 const PersonPage = () => {
-  const [course, setCourse, updateCourse] = useCourse()
+  const [course, _, updateCourse] = useCourse()
   const params = useParams()
   const [loading, setLoading] = useState(false)
   const [submittingAssignment, setSubmittingAssignment] = useState(false)
@@ -134,16 +135,16 @@ const PersonPage = () => {
                 label={value}
                 checked={info.submitted.includes(assignments[rowIndex].name)}
                 disabled={submittingAssignment}
-                onChange={(e) => {
-                  if (e.currentTarget.checked) {
-                    info.submitted.push(assignments[rowIndex].name)
-                  } else {
-                    info.submitted = info.submitted.filter(
-                      (a) => a !== assignments[rowIndex].name,
-                    )
-                  }
-                  setCourse(course, setSubmittingAssignment)
-                }}
+                onChange={(e) =>
+                  updateCourse(
+                    {
+                      [`people.${name}.submitted`]: e.currentTarget.checked
+                        ? arrayUnion(assignments[rowIndex].name)
+                        : arrayRemove(assignments[rowIndex].name),
+                    },
+                    setSubmittingAssignment,
+                  )
+                }
               />
             )
           }
