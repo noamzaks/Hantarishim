@@ -12,25 +12,19 @@ import {
 import FontAwesome from "../components/FontAwesome"
 import { useEffect, useState } from "react"
 import React from "react"
-import { useLocalStorage } from "../lib/hooks"
 
 const FormPage = () => {
   const [course, setCourse] = useCourse()
   const [loading, setLoading] = useState(false)
   const params = useParams()
   const formName = params.form!
-  const [questions, setQuestions] = useLocalStorage<FormQuestion[]>({
-    key: `Questions ${formName}`,
-    defaultValue: [],
-  })
+  const [questions, setQuestions] = useState<FormQuestion[]>([])
 
   const form = course.forms!.find((form) => form.name === formName)
 
   useEffect(() => {
-    if (!questions && form?.questions) {
-      setQuestions(form.questions)
-    }
-  }, [questions, form])
+    setQuestions(form?.questions ?? [])
+  }, [form, formName])
 
   if (!form) {
     return <></>
@@ -81,7 +75,15 @@ const FormPage = () => {
                   }}
                 />
                 <Tooltip label="מחיקת השאלה">
-                  <ActionIcon color="red" flex="none" mr="xs">
+                  <ActionIcon
+                    color="red"
+                    flex="none"
+                    mr="xs"
+                    onClick={() => {
+                      questions.splice(questionIndex, 1)
+                      setQuestions([...questions])
+                    }}
+                  >
                     <FontAwesome icon="trash" />
                   </ActionIcon>
                 </Tooltip>

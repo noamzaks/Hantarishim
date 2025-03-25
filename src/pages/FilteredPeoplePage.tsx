@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom"
 import { useCourse } from "../models"
-import { Button, Loader, Switch } from "@mantine/core"
+import { Button, Loader, Switch, TextInput } from "@mantine/core"
 import FontAwesome from "../components/FontAwesome"
 import { useEffect, useState } from "react"
 import DataTable from "../components/DataTable"
@@ -13,12 +13,17 @@ import {
   showError,
   showSuccess,
 } from "../lib/utilities"
+import { useLocalStorage } from "../lib/hooks"
 
 const ATTENDANCE_ID = "attendance"
 
 const FilteredPeoplePage = () => {
   const [resettingPresence, setResettingPresence] = useState(false)
   const [focusedView, setFocusedView] = useState(false)
+  const [myLocation, setMyLocation] = useLocalStorage<string>({
+    key: "My Location",
+    defaultValue: "",
+  })
   const [selectedRows, setSelectedRows] = useState<number[]>([])
   const [loading, setLoading] = useState(false)
   const [course, setCourse, updateCourse] = useCourse()
@@ -148,6 +153,7 @@ const FilteredPeoplePage = () => {
                 onClick={() => {
                   for (const name of filteredNames) {
                     course.people![name].present = false
+                    course.people![name].location = ""
                   }
                   setCourse(course, setResettingPresence)
                 }}
@@ -189,18 +195,28 @@ const FilteredPeoplePage = () => {
               </>
             )}
           </div>
+          <TextInput
+            label="איפה אני?"
+            mb="xs"
+            leftSection={<FontAwesome icon="location-dot" />}
+            value={myLocation}
+            onChange={(e) => setMyLocation(e.currentTarget.value)}
+          />
           <DataTable
             selectable
             selectedRows={selectedRows}
             setSelectedRows={setSelectedRows}
             tableName="אנשים"
             data={{
-              head: ["שם", "נוכחות", "סיבת היעדרות"].concat(attributes),
+              head: ["שם", "נוכחות", "סיבת היעדרות", "מיקום"].concat(
+                attributes,
+              ),
               body: filteredNames.map((personName) =>
                 [
                   personName,
                   course.people![personName].present ? "נוכח/ת" : "חסר/ה",
                   course.people![personName].absenceReason ?? "",
+                  course.people![personName].location ?? "",
                 ].concat(
                   attributes.map(
                     (attribute) =>
@@ -230,13 +246,15 @@ const FilteredPeoplePage = () => {
                       course.people![filteredNames[rowIndex]].present ?? false
                     }
                     onChange={(e) => {
-                      updateCourse(
-                        {
-                          [`people.${filteredNames[rowIndex]}.present`]:
-                            e.currentTarget.checked,
-                        },
-                        setLoading,
-                      )
+                      const updates: Record<string, any> = {
+                        [`people.${filteredNames[rowIndex]}.present`]:
+                          e.currentTarget.checked,
+                      }
+                      updates[`people.${filteredNames[rowIndex]}.location`] = e
+                        .currentTarget.checked
+                        ? myLocation
+                        : ""
+                      updateCourse(updates, setLoading)
                     }}
                   />
                 )

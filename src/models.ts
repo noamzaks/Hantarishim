@@ -6,6 +6,7 @@ import { emailToUsername } from "./lib/utilities"
 export interface Person {
   absenceReason?: string
   present: boolean
+  location?: string
   attributes: Record<string, string>
   submitted: string[]
 }
