@@ -33,7 +33,7 @@ const PeoplePage = () => {
                 )}
               {attribute}
             </h2>
-            {Array.from(attributeValues[attribute])
+            {Array.from(attributeValues[attribute] ?? [])
               .sort()
               .map((attributeValue, attributeValueIndex) => (
                 <LinkButton
