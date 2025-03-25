@@ -45,6 +45,8 @@ export interface Attribute {
   isNumber?: boolean
   // Sorting value, larger is higher.
   priority?: number
+  // Whether the attribute sets a location (for instance, אוטובוס).
+  isLocation?: boolean
   /**
    * Attributes which should be initialized automatically based on their (only) value matching the current value of this attribute.
    * For example, the derivative attributes of צוות might be מחלקה.

@@ -68,6 +68,12 @@ const FilteredPeoplePage = () => {
     )
   }, [])
 
+  useEffect(() => {
+    if (course.attributes![attribute].isLocation) {
+      setMyLocation(`${attribute}: ${attributeValue}`)
+    }
+  }, [course, attribute, attributeValue])
+
   return (
     <div>
       <h1 style={{ display: "flex", alignItems: "center" }}>

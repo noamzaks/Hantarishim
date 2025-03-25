@@ -20,6 +20,7 @@ const AddAttribute = () => {
   const [priority, setPriority] = useState("")
   const [derivativeAttributes, setDerivativeAttributes] = useState<string[]>([])
   const [filterable, setFilterable] = useState(true)
+  const [isLocation, setIsLocation] = useState(false)
   const [isNumber, setIsNumber] = useState(false)
   const [loading, setLoading] = useState(false)
 
@@ -31,6 +32,7 @@ const AddAttribute = () => {
       setIcon(course.attributes[name].icon ?? "")
       setPriority(course.attributes[name].priority?.toString() ?? "")
       setFilterable(course.attributes[name].filterable ?? false)
+      setIsLocation(course.attributes[name].isLocation ?? false)
       setIsNumber(course.attributes[name].isNumber ?? false)
       setColor(course.attributes[name].color ?? "")
       setDerivativeAttributes(
@@ -40,6 +42,7 @@ const AddAttribute = () => {
       setIcon("")
       setPriority("")
       setFilterable(true)
+      setIsLocation(false)
       setIsNumber(false)
       setColor("")
       setDerivativeAttributes([])
@@ -97,6 +100,12 @@ const AddAttribute = () => {
         checked={filterable}
         onChange={(e) => setFilterable(e.currentTarget.checked)}
       />
+      <Checkbox
+        mt="xs"
+        label="קובע מיקום (לדוגמה אוטובוס)"
+        checked={isLocation}
+        onChange={(e) => setIsLocation(e.currentTarget.checked)}
+      />
       <Button
         mt="xs"
         fullWidth
@@ -112,6 +121,7 @@ const AddAttribute = () => {
             icon,
             color,
             priority: parseInt(priority, 10),
+            isLocation,
             filterable,
             isNumber,
             derivativeAttributes,
