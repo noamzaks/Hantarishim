@@ -107,7 +107,11 @@ const FilteredPeoplePage = () => {
         </Button.Group>
       </h1>
       <p
-        style={{ marginBottom: 5, fontSize: focusedView ? 22 : undefined }}
+        style={{
+          marginBottom: 5,
+          fontSize: focusedView ? 22 : undefined,
+          overflowX: "auto",
+        }}
         id={ATTENDANCE_ID}
       >
         {focusedView && (
