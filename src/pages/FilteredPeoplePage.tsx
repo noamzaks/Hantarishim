@@ -1,6 +1,13 @@
 import { useNavigate, useParams } from "react-router-dom"
 import { useCourse } from "../models"
-import { Button, Loader, Switch, TextInput } from "@mantine/core"
+import {
+  Autocomplete,
+  Button,
+  Fieldset,
+  Loader,
+  Switch,
+  TextInput,
+} from "@mantine/core"
 import FontAwesome from "../components/FontAwesome"
 import { useEffect, useState } from "react"
 import DataTable from "../components/DataTable"
@@ -25,6 +32,8 @@ const FilteredPeoplePage = () => {
     defaultValue: "",
   })
   const [selectedRows, setSelectedRows] = useState<number[]>([])
+  const [addName, setAddName] = useState("")
+  const [loadAddName, setLoadAddName] = useState(false)
   const [loading, setLoading] = useState(false)
   const [course, setCourse, updateCourse] = useCourse()
   const params = useParams()
@@ -267,6 +276,34 @@ const FilteredPeoplePage = () => {
               return <React.Fragment key={rowIndex}>{value}</React.Fragment>
             }}
           />
+          <Fieldset legend="שיוך" mt="xs">
+            <Autocomplete
+              value={addName}
+              onChange={setAddName}
+              label="שם"
+              data={Object.keys(course.people ?? {})
+                .filter((name) => !filteredNames.includes(name))
+                .sort()}
+            />
+            <Button
+              fullWidth
+              mt="xs"
+              leftSection={<FontAwesome icon="plus" />}
+              disabled={(course.people ?? {})[addName] === undefined}
+              onClick={() => {
+                updateCourse(
+                  {
+                    [`people.${addName}.attributes.${attribute}`]:
+                      attributeValue,
+                  },
+                  setLoadAddName,
+                )
+              }}
+              loading={loadAddName}
+            >
+              הוספה
+            </Button>
+          </Fieldset>
         </>
       )}
     </div>
