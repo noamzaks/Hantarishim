@@ -1,6 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom"
-import { useCourse } from "../models"
+import { getAttributes, useCourse } from "../models"
 import {
+  Alert,
   Autocomplete,
   Button,
   Fieldset,
@@ -60,6 +61,7 @@ const FilteredPeoplePage = () => {
     )
 
   const splitter = focusedView ? <br /> : "•"
+  const personToAdd = (course.people ?? {})[addName]
 
   useEffect(() => {
     const names: string[] = getLocalStorage("Selected", [])
@@ -291,11 +293,12 @@ const FilteredPeoplePage = () => {
                 .filter((name) => !filteredNames.includes(name))
                 .sort()}
             />
+
             <Button
               fullWidth
               mt="xs"
               leftSection={<FontAwesome icon="plus" />}
-              disabled={(course.people ?? {})[addName] === undefined}
+              disabled={personToAdd === undefined}
               onClick={() => {
                 updateCourse(
                   {
@@ -309,6 +312,19 @@ const FilteredPeoplePage = () => {
             >
               הוספה
             </Button>
+            {personToAdd !== undefined && (
+              <Alert
+                color="yellow"
+                icon={<FontAwesome icon="circle-info" />}
+                mt="xs"
+              >
+                {getAttributes(course).map((attributeName, attributeIndex) => (
+                  <p key={attributeIndex}>
+                    {attributeName}: {personToAdd.attributes[attributeName]}
+                  </p>
+                ))}
+              </Alert>
+            )}
           </Fieldset>
         </>
       )}
