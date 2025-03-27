@@ -62,6 +62,7 @@ const FilteredPeoplePage = () => {
 
   const splitter = focusedView ? <br /> : "•"
   const personToAdd = (course.people ?? {})[addName]
+  const hasPersonToAdd = filteredNames.includes(addName)
 
   useEffect(() => {
     const names: string[] = getLocalStorage("Selected", [])
@@ -297,20 +298,27 @@ const FilteredPeoplePage = () => {
             <Button
               fullWidth
               mt="xs"
-              leftSection={<FontAwesome icon="plus" />}
+              color={hasPersonToAdd ? "red" : undefined}
+              leftSection={
+                hasPersonToAdd ? (
+                  <FontAwesome icon="trash" />
+                ) : (
+                  <FontAwesome icon="plus" />
+                )
+              }
               disabled={personToAdd === undefined}
               onClick={() => {
                 updateCourse(
                   {
                     [`people.${addName}.attributes.${attribute}`]:
-                      attributeValue,
+                      hasPersonToAdd ? "" : attributeValue,
                   },
                   setLoadAddName,
                 )
               }}
               loading={loadAddName}
             >
-              הוספה
+              {hasPersonToAdd ? "הסרה" : "הוספה"}
             </Button>
             {personToAdd !== undefined && (
               <Alert
