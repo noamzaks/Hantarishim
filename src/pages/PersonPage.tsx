@@ -111,14 +111,17 @@ const PersonPage = () => {
 
       <h2>מטלות</h2>
       <DataTable
+      defaultSort={2}
+      defaultReversed={true}
         hideIfEmpty
         tableName="מטלות"
         data={{
-          head: ["שם", "תאריך הגשה", "הוגש"],
+          head: ["שם", "תאריך הגשה", "הוגש", "תיאור"],
           body: assignments.map((assignment) => [
             assignment.name,
             assignment.due,
             info.submitted.includes(assignment.name) ? "כן" : "לא",
+            assignment.description,
           ]),
         }}
         renderValue={(rowIndex, columnName, value) => {
@@ -149,6 +152,10 @@ const PersonPage = () => {
                 }
               />
             )
+          }
+
+          if (columnName === "תיאור") {
+            return <span key={rowIndex} style={{whiteSpace: "pre"}}>{value}</span>
           }
 
           return <React.Fragment key={rowIndex}>{value}</React.Fragment>

@@ -4,6 +4,7 @@ import {
   Fieldset,
   Select,
   TagsInput,
+  Textarea,
   TextInput,
 } from "@mantine/core"
 import { Assignment, getAttributes, useCourse } from "../models"
@@ -69,7 +70,7 @@ const AddAssignment = () => {
         onChange={setName}
         data={course.assignments?.map((assignment) => assignment.name) ?? []}
       />
-      <TextInput
+      <Textarea
         mt="xs"
         label="תיאור"
         value={description}

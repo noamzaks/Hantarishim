@@ -48,8 +48,9 @@ const AssignmentPage = () => {
   return (
     <>
       <h1>{assignmentName}</h1>
-      <p>
-        <b>תיאור:</b> {assignment.description}
+      <p style={{whiteSpace: "pre"}}>
+        <b>תיאור:</b><br />
+        {assignment.description}
       </p>
       <p>
         <b>תאריך הגשה:</b> {assignment.due}

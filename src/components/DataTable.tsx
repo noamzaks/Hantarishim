@@ -35,6 +35,8 @@ const DataTable = ({
   selectable,
   selectedRows,
   setSelectedRows,
+  defaultSort,
+  defaultReversed
 }: {
   tableName: string
   data: DataTableData
@@ -50,9 +52,11 @@ const DataTable = ({
   selectable?: boolean
   selectedRows?: number[]
   setSelectedRows?: React.Dispatch<React.SetStateAction<number[]>>
+  defaultSort?: number
+  defaultReversed?: boolean
 }) => {
-  const [sortByColumn, setSortByColumn] = useState(0)
-  const [reversed, setReversed] = useState(false)
+  const [sortByColumn, setSortByColumn] = useState(defaultSort ?? 0)
+  const [reversed, setReversed] = useState(defaultReversed ?? false)
   const [search, setSearch] = useState("")
 
   if (hideIfEmpty && data.body.length === 0) {
