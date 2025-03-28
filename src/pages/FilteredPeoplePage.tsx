@@ -248,18 +248,25 @@ const FilteredPeoplePage = () => {
             }}
             renderValue={(rowIndex, columnName, value) => {
               if (columnName === "") {
-                return <Tooltip label={`הסרה מה${attribute}`} ><ActionIcon color="red"
-                onClick={() => {
-                  updateCourse(
-                    {
-                      [`people.${filteredNames[rowIndex]}.attributes.${attribute}`]:
-                        deleteField(),
-                    },
-                    setLoading,
-                  )
-                }}
-                loading={loading}
-                ><FontAwesome icon="trash" /></ActionIcon></Tooltip>
+                return (
+                  <Tooltip label={`הסרה מה${attribute}`}>
+                    <ActionIcon
+                      color="red"
+                      onClick={() => {
+                        updateCourse(
+                          {
+                            [`people.${filteredNames[rowIndex]}.attributes.${attribute}`]:
+                              deleteField(),
+                          },
+                          setLoading,
+                        )
+                      }}
+                      loading={loading}
+                    >
+                      <FontAwesome icon="trash" />
+                    </ActionIcon>
+                  </Tooltip>
+                )
               }
 
               if (columnName === "שם") {
@@ -276,7 +283,7 @@ const FilteredPeoplePage = () => {
               if (columnName === "נוכחות") {
                 return (
                   <Switch
-                  size="md"
+                    size="md"
                     offLabel="חסר/ה"
                     onLabel="נוכח/ת"
                     key={rowIndex}
@@ -325,7 +332,9 @@ const FilteredPeoplePage = () => {
               onChange={setAddName}
               label="שם"
               data={Object.keys(course.people ?? {})
-                .filter((name) => !filteredNames.includes(name) && name !== addName)
+                .filter(
+                  (name) => !filteredNames.includes(name) && name !== addName,
+                )
                 .sort()}
             />
 

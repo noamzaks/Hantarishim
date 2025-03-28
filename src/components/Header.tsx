@@ -43,9 +43,8 @@ const Header = ({
       {!loading && currentUser !== undefined && currentUser !== null && (
         <>
           <span style={{ overflowX: "auto", display: "flex" }}>
-            {(me === ""
-              ? links
-              : [
+            {(me !== ""
+              ? [
                   {
                     title: "דף אישי",
                     url: `/people/${me}`,
@@ -53,6 +52,7 @@ const Header = ({
                   },
                   ...links,
                 ]
+              : links
             ).map((link, linkIndex) => (
               <Tooltip label={link.title} key={linkIndex}>
                 <ActionIcon

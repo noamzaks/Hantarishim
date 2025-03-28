@@ -36,7 +36,7 @@ const DataTable = ({
   selectedRows,
   setSelectedRows,
   defaultSort,
-  defaultReversed
+  defaultReversed,
 }: {
   tableName: string
   data: DataTableData
@@ -123,34 +123,36 @@ const DataTable = ({
               {selectable && <Table.Th />}
               {displayData.head?.map((element, columnIndex) => (
                 <Table.Th key={columnIndex} style={{ padding: 0 }}>
-                  {element !== "" && <UnstyledButton
-                    className="control"
-                    onClick={
-                      disableSort
-                        ? undefined
-                        : () => {
-                            if (sortByColumn === columnIndex) {
-                              setReversed((r) => !r)
-                            } else {
-                              setSortByColumn(columnIndex)
+                  {element !== "" && (
+                    <UnstyledButton
+                      className="control"
+                      onClick={
+                        disableSort
+                          ? undefined
+                          : () => {
+                              if (sortByColumn === columnIndex) {
+                                setReversed((r) => !r)
+                              } else {
+                                setSortByColumn(columnIndex)
+                              }
                             }
+                      }
+                    >
+                      {disableSort || (
+                        <FontAwesome
+                          props={{ style: { fontSize: 14, marginInline: 5 } }}
+                          icon={
+                            sortByColumn === columnIndex
+                              ? reversed
+                                ? "sort-up"
+                                : "sort-down"
+                              : "sort"
                           }
-                    }
-                  >
-                    {disableSort || (
-                      <FontAwesome
-                        props={{ style: { fontSize: 14, marginInline: 5 } }}
-                        icon={
-                          sortByColumn === columnIndex
-                            ? reversed
-                              ? "sort-up"
-                              : "sort-down"
-                            : "sort"
-                        }
-                      />
-                    )}
-                    {element}
-                  </UnstyledButton>}
+                        />
+                      )}
+                      {element}
+                    </UnstyledButton>
+                  )}
                 </Table.Th>
               ))}
             </Table.Tr>
@@ -180,7 +182,9 @@ const DataTable = ({
                     </Table.Td>
                   )}
                   {row.map((value, valueIndex) => (
-                    <Table.Td key={valueIndex} style={{whiteSpace: "nowrap"}}>{value}</Table.Td>
+                    <Table.Td key={valueIndex} style={{ whiteSpace: "nowrap" }}>
+                      {value}
+                    </Table.Td>
                   ))}
                 </Table.Tr>
               )
