@@ -37,7 +37,9 @@ const PersonPage = () => {
     <>
       <h1>{name}</h1>
       <Switch
-        label="נוכח/ת"
+        size="md"
+        offLabel="חסר/ה"
+        onLabel="נוכח/ת"
         mb={5}
         disabled={loading}
         checked={info.present ?? false}
@@ -73,7 +75,7 @@ const PersonPage = () => {
           {getAttributes(course).map((attributeName, attributeIndex) => {
             const attribute = course.attributes![attributeName]
 
-            if (attribute.filterable) {
+            if (attribute.filterable && info.attributes[attributeName] !== undefined) {
               return (
                 <LinkButton
                   size="xs"
@@ -99,7 +101,7 @@ const PersonPage = () => {
             } else {
               return (
                 <p key={attributeIndex}>
-                  {attributeName}: {info.attributes[attributeName]}
+                  {info.attributes[attributeName] !== undefined ? `${attributeName}: ${info.attributes[attributeName]}` : ""}
                 </p>
               )
             }

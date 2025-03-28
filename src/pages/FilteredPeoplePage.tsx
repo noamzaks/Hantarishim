@@ -1,6 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom"
 import { getAttributes, useCourse } from "../models"
 import {
+  ActionIcon,
   Alert,
   Autocomplete,
   Button,
@@ -8,6 +9,7 @@ import {
   Loader,
   Switch,
   TextInput,
+  Tooltip,
 } from "@mantine/core"
 import FontAwesome from "../components/FontAwesome"
 import { useEffect, useState } from "react"
@@ -22,6 +24,8 @@ import {
   showSuccess,
 } from "../lib/utilities"
 import { useLocalStorage } from "../lib/hooks"
+import AbsenceEditor from "../components/AbsenceEditor"
+import { deleteField } from "firebase/firestore"
 
 const ATTENDANCE_ID = "attendance"
 
@@ -225,16 +229,17 @@ const FilteredPeoplePage = () => {
             onChange={(e) => setMyLocation(e.currentTarget.value)}
           />
           <DataTable
-            selectable
+            selectable={!course.attributes![attribute].quickDeletable}
             selectedRows={selectedRows}
             setSelectedRows={setSelectedRows}
             tableName="אנשים"
             data={{
-              head: ["שם", "נוכחות", "סיבת היעדרות", "מיקום"].concat(
+              head: ["", "שם", "נוכחות", "סיבת היעדרות", "מיקום"].concat(
                 attributes,
               ),
               body: filteredNames.map((personName) =>
                 [
+                  "",
                   personName,
                   course.people![personName].present ? "נוכח/ת" : "חסר/ה",
                   course.people![personName].absenceReason ?? "",
@@ -248,6 +253,21 @@ const FilteredPeoplePage = () => {
               ),
             }}
             renderValue={(rowIndex, columnName, value) => {
+              if (columnName === "") {
+                return <Tooltip label={`הסרה מה${attribute}`} ><ActionIcon color="red"
+                onClick={() => {
+                  updateCourse(
+                    {
+                      [`people.${filteredNames[rowIndex]}.attributes.${attribute}`]:
+                        deleteField(),
+                    },
+                    setLoading,
+                  )
+                }}
+                loading={loading}
+                ><FontAwesome icon="trash" /></ActionIcon></Tooltip>
+              }
+
               if (columnName === "שם") {
                 return (
                   <LinkAnchor
@@ -262,7 +282,9 @@ const FilteredPeoplePage = () => {
               if (columnName === "נוכחות") {
                 return (
                   <Switch
-                    label={value}
+                  size="md"
+                    offLabel="חסר/ה"
+                    onLabel="נוכח/ת"
                     key={rowIndex}
                     checked={
                       course.people![filteredNames[rowIndex]].present ?? false
@@ -282,6 +304,24 @@ const FilteredPeoplePage = () => {
                 )
               }
 
+              if (columnName === "סיבת היעדרות") {
+                return (
+                  <AbsenceEditor
+                    key={rowIndex}
+                    defaultValue={value}
+                    setValue={(v, setLoading) =>
+                      updateCourse(
+                        {
+                          [`people.${filteredNames[rowIndex]}.absenceReason`]:
+                            v,
+                        },
+                        setLoading,
+                      )
+                    }
+                  />
+                )
+              }
+
               return <React.Fragment key={rowIndex}>{value}</React.Fragment>
             }}
           />
@@ -291,7 +331,7 @@ const FilteredPeoplePage = () => {
               onChange={setAddName}
               label="שם"
               data={Object.keys(course.people ?? {})
-                .filter((name) => !filteredNames.includes(name))
+                .filter((name) => !filteredNames.includes(name) && name !== addName)
                 .sort()}
             />
 

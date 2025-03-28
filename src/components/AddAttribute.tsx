@@ -20,6 +20,7 @@ const AddAttribute = () => {
   const [priority, setPriority] = useState("")
   const [derivativeAttributes, setDerivativeAttributes] = useState<string[]>([])
   const [filterable, setFilterable] = useState(true)
+  const [quickDeletable, setQuickDeletable] = useState(false)
   const [isLocation, setIsLocation] = useState(false)
   const [isNumber, setIsNumber] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -32,6 +33,7 @@ const AddAttribute = () => {
       setIcon(course.attributes[name].icon ?? "")
       setPriority(course.attributes[name].priority?.toString() ?? "")
       setFilterable(course.attributes[name].filterable ?? false)
+      setQuickDeletable(course.attributes[name].quickDeletable ?? false)
       setIsLocation(course.attributes[name].isLocation ?? false)
       setIsNumber(course.attributes[name].isNumber ?? false)
       setColor(course.attributes[name].color ?? "")
@@ -42,6 +44,7 @@ const AddAttribute = () => {
       setIcon("")
       setPriority("")
       setFilterable(true)
+      setQuickDeletable(false)
       setIsLocation(false)
       setIsNumber(false)
       setColor("")
@@ -102,6 +105,12 @@ const AddAttribute = () => {
       />
       <Checkbox
         mt="xs"
+        label="מחיק במהירות (בכל שורה בטבלה יופיע כפתור להסרת המאפיין)"
+        checked={quickDeletable}
+        onChange={(e) => setQuickDeletable(e.currentTarget.checked)}
+      />
+      <Checkbox
+        mt="xs"
         label="קובע מיקום (לדוגמה אוטובוס)"
         checked={isLocation}
         onChange={(e) => setIsLocation(e.currentTarget.checked)}
@@ -123,6 +132,7 @@ const AddAttribute = () => {
             priority: parseInt(priority, 10),
             isLocation,
             filterable,
+            quickDeletable,
             isNumber,
             derivativeAttributes,
           }

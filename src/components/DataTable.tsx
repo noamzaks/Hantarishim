@@ -113,13 +113,13 @@ const DataTable = ({
         onChange={(e) => setSearch(e.currentTarget.value)}
       />
       <div style={{ maxWidth: "100%", overflow: "auto" }}>
-        <Table>
+        <Table horizontalSpacing={7.5} verticalSpacing={7.5}>
           <Table.Thead>
             <Table.Tr>
               {selectable && <Table.Th />}
               {displayData.head?.map((element, columnIndex) => (
                 <Table.Th key={columnIndex} style={{ padding: 0 }}>
-                  <UnstyledButton
+                  {element !== "" && <UnstyledButton
                     className="control"
                     onClick={
                       disableSort
@@ -146,7 +146,7 @@ const DataTable = ({
                       />
                     )}
                     {element}
-                  </UnstyledButton>
+                  </UnstyledButton>}
                 </Table.Th>
               ))}
             </Table.Tr>
@@ -183,18 +183,17 @@ const DataTable = ({
             })}
           </Table.Tbody>
         </Table>
+        {!hideDownload && (
+          <Button
+            w="100%"
+            mt="xs"
+            leftSection={<FontAwesome icon="download" />}
+            onClick={() => downloadTableData(tableName, data)}
+          >
+            הורדה כ-CSV
+          </Button>
+        )}
       </div>
-      {!hideDownload && (
-        <Button
-          w={400}
-          maw="100%"
-          mt="xs"
-          leftSection={<FontAwesome icon="download" />}
-          onClick={() => downloadTableData(tableName, data)}
-        >
-          הורדה כ-CSV
-        </Button>
-      )}
     </>
   )
 }

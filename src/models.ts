@@ -41,6 +41,8 @@ export interface Attribute {
   color?: string
   // Whether there should be a page of everyone with the same attribute value (for instance, צוות and not תעודת זהות).
   filterable?: boolean
+  // Whether there should be a trash icon in every line of the filter view, to quickly remove the attribute's value (instead of selection).
+  quickDeletable?: boolean
   // Whether the attribute is a number
   isNumber?: boolean
   // Sorting value, larger is higher.
