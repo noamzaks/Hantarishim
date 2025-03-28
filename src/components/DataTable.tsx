@@ -176,7 +176,7 @@ const DataTable = ({
                     </Table.Td>
                   )}
                   {row.map((value, valueIndex) => (
-                    <Table.Td key={valueIndex}>{value}</Table.Td>
+                    <Table.Td key={valueIndex} style={{whiteSpace: "nowrap"}}>{value}</Table.Td>
                   ))}
                 </Table.Tr>
               )
