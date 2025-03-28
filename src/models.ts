@@ -115,6 +115,10 @@ export const useCourse = (): [
 ]
 
 export const getAttributes = (course: Course) => {
+  if (!course) {
+    return []
+  }
+  
   return Object.keys(course.attributes ?? {}).sort((a, b) => {
     const infoA = course.attributes![a]
     const infoB = course.attributes![b]

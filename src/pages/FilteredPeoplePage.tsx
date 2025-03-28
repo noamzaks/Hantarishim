@@ -56,13 +56,7 @@ const FilteredPeoplePage = () => {
   const present = filteredNames.filter(
     (personName) => course.people![personName].present,
   ).length
-  const attributes = Object.keys(course.attributes ?? {})
-    .sort()
-    .filter(
-      (x) =>
-        x !== attribute &&
-        !(course.attributes![attribute].derivativeAttributes ?? []).includes(x),
-    )
+  const attributes = getAttributes(course)
 
   const splitter = focusedView ? <br /> : "•"
   const personToAdd = (course.people ?? {})[addName]
