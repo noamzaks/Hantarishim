@@ -230,6 +230,19 @@ const FilteredPeoplePage = () => {
             onChange={(e) => setMyLocation(e.currentTarget.value)}
           />
           <DataTable
+            defaultSort={
+              course.attributes![attribute].defaultSort
+                ? otherAttributes.indexOf(
+                    course.attributes![attribute].defaultSort,
+                  ) !== -1
+                  ? otherAttributes.indexOf(
+                      course.attributes![attribute].defaultSort,
+                    ) +
+                    4 +
+                    (course.attributes![attribute].quickDeletable ? 1 : 0)
+                  : undefined
+                : undefined
+            }
             selectable={!course.attributes![attribute].quickDeletable}
             selectedRows={selectedRows}
             setSelectedRows={setSelectedRows}

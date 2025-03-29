@@ -6,6 +6,7 @@ import {
   Autocomplete,
   ColorInput,
   MultiSelect,
+  Select,
 } from "@mantine/core"
 import { useEffect, useState } from "react"
 import { getAttributes, useCourse } from "../models"
@@ -17,6 +18,7 @@ const AddAttribute = () => {
   const [name, setName] = useState("")
   const [icon, setIcon] = useState("")
   const [color, setColor] = useState("")
+  const [defaultSort, setDefaultSort] = useState("")
   const [priority, setPriority] = useState("")
   const [derivativeAttributes, setDerivativeAttributes] = useState<string[]>([])
   const [filterable, setFilterable] = useState(true)
@@ -42,6 +44,7 @@ const AddAttribute = () => {
       setDerivativeAttributes(
         course.attributes[name].derivativeAttributes ?? [],
       )
+      setDefaultSort(course.attributes[name].defaultSort ?? "")
     } else if (name === "") {
       setIcon("")
       setPriority("")
@@ -52,6 +55,7 @@ const AddAttribute = () => {
       setColor("")
       setIsButton(false)
       setDerivativeAttributes([])
+      setDefaultSort("")
     }
   }, [name])
 
@@ -79,6 +83,13 @@ const AddAttribute = () => {
         label="צבע"
         value={color}
         onChange={setColor}
+      />
+      <Select
+        mt="xs"
+        label="מיון דיפולטי"
+        value={defaultSort}
+        onChange={(v) => setDefaultSort(v ?? "")}
+        data={attributes.filter((x) => x !== name)}
       />
       <TextInput
         mt="xs"
@@ -142,6 +153,7 @@ const AddAttribute = () => {
             isLocation,
             filterable,
             quickDeletable,
+            defaultSort,
             isNumber,
             isButton,
             derivativeAttributes,

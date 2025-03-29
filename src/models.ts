@@ -56,6 +56,8 @@ export interface Attribute {
    * For example, the derivative attributes of צוות might be מחלקה.
    */
   derivativeAttributes?: string[]
+  // The attribute to sort by initially in filter views
+  defaultSort?: string
 }
 
 export interface Course {
