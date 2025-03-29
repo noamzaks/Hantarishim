@@ -57,6 +57,7 @@ const FilteredPeoplePage = () => {
     (personName) => course.people![personName].present,
   ).length
   const attributes = getAttributes(course)
+  const otherAttributes = attributes.filter((a => a !== attribute && !course.attributes![attribute].derivativeAttributes?.includes(a)))
 
   const splitter = focusedView ? <br /> : "•"
   const personToAdd = (course.people ?? {})[addName]
@@ -229,7 +230,7 @@ const FilteredPeoplePage = () => {
             tableName="אנשים"
             data={{
               head: ["", "שם", "נוכחות", "סיבת היעדרות", "מיקום"].concat(
-                attributes,
+                otherAttributes,
               ),
               body: filteredNames.map((personName) =>
                 [
@@ -239,7 +240,7 @@ const FilteredPeoplePage = () => {
                   course.people![personName].absenceReason ?? "",
                   course.people![personName].location ?? "",
                 ].concat(
-                  attributes.map(
+                  otherAttributes.map(
                     (attribute) =>
                       course.people![personName].attributes[attribute],
                   ),
@@ -369,7 +370,7 @@ const FilteredPeoplePage = () => {
                 icon={<FontAwesome icon="circle-info" />}
                 mt="xs"
               >
-                {getAttributes(course).map((attributeName, attributeIndex) => (
+                {attributes.map((attributeName, attributeIndex) => (
                   <p key={attributeIndex}>
                     {attributeName}: {personToAdd.attributes[attributeName]}
                   </p>
