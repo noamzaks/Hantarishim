@@ -229,12 +229,11 @@ const FilteredPeoplePage = () => {
             setSelectedRows={setSelectedRows}
             tableName="אנשים"
             data={{
-              head: ["", "שם", "נוכחות", "סיבת היעדרות", "מיקום"].concat(
+              head: (course.attributes![attribute].quickDeletable ? [""] : []).concat(["שם", "נוכחות", "סיבת היעדרות", "מיקום"].concat(
                 otherAttributes,
-              ),
+              )),
               body: filteredNames.map((personName) =>
-                [
-                  "",
+                (course.attributes![attribute].quickDeletable ? [""] : []).concat([
                   personName,
                   course.people![personName].present ? "נוכח/ת" : "חסר/ה",
                   course.people![personName].absenceReason ?? "",
@@ -244,7 +243,7 @@ const FilteredPeoplePage = () => {
                     (attribute) =>
                       course.people![personName].attributes[attribute],
                   ),
-                ),
+                )),
               ),
             }}
             renderValue={(rowIndex, columnName, value) => {
