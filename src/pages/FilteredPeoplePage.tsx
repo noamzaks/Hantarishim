@@ -309,6 +309,7 @@ const FilteredPeoplePage = () => {
                           ml={5}
                           key={attributeIndex}
                           component="a"
+                          color={course.attributes![attributeName].color}
                           href={
                             course.people![filteredNames[rowIndex]].attributes[
                               attributeName

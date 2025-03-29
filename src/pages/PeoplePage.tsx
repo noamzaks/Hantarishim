@@ -34,6 +34,7 @@ const PeoplePage = () => {
               {attribute}
             </h2>
             {Array.from(attributeValues[attribute] ?? [])
+              .filter((x) => x !== "")
               .sort()
               .map((attributeValue, attributeValueIndex) => (
                 <LinkButton
