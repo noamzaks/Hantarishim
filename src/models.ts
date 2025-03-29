@@ -45,6 +45,8 @@ export interface Attribute {
   quickDeletable?: boolean
   // Whether the attribute is a number
   isNumber?: boolean
+  // Whether the attribute should appear as a button near the name.
+  isButton?: boolean
   // Sorting value, larger is higher.
   priority?: number
   // Whether the attribute sets a location (for instance, אוטובוס).

@@ -11,7 +11,7 @@ import {
   TextInput,
   Tooltip,
 } from "@mantine/core"
-import FontAwesome from "../components/FontAwesome"
+import FontAwesome, { FontAwesomeIcon } from "../components/FontAwesome"
 import { useEffect, useState } from "react"
 import DataTable from "../components/DataTable"
 import React from "react"
@@ -26,6 +26,7 @@ import {
 import { useLocalStorage } from "../lib/hooks"
 import AbsenceEditor from "../components/AbsenceEditor"
 import { deleteField } from "firebase/firestore"
+import { modals } from "@mantine/modals"
 
 const ATTENDANCE_ID = "attendance"
 
@@ -57,7 +58,12 @@ const FilteredPeoplePage = () => {
     (personName) => course.people![personName].present,
   ).length
   const attributes = getAttributes(course)
-  const otherAttributes = attributes.filter((a => a !== attribute && !course.attributes![attribute].derivativeAttributes?.includes(a)))
+  const otherAttributes = attributes.filter(
+    (a) =>
+      a !== attribute &&
+      !course.attributes![attribute].derivativeAttributes?.includes(a) &&
+      !course.attributes![a].isButton,
+  )
 
   const splitter = focusedView ? <br /> : "•"
   const personToAdd = (course.people ?? {})[addName]
@@ -229,21 +235,31 @@ const FilteredPeoplePage = () => {
             setSelectedRows={setSelectedRows}
             tableName="אנשים"
             data={{
-              head: (course.attributes![attribute].quickDeletable ? [""] : []).concat(["שם", "נוכחות", "סיבת היעדרות", "מיקום"].concat(
-                otherAttributes,
-              )),
+              head: (course.attributes![attribute].quickDeletable
+                ? [""]
+                : []
+              ).concat(
+                ["שם", "נוכחות", "סיבת היעדרות", "מיקום"].concat(
+                  otherAttributes,
+                ),
+              ),
               body: filteredNames.map((personName) =>
-                (course.attributes![attribute].quickDeletable ? [""] : []).concat([
-                  personName,
-                  course.people![personName].present ? "נוכח/ת" : "חסר/ה",
-                  course.people![personName].absenceReason ?? "",
-                  course.people![personName].location ?? "",
-                ].concat(
-                  otherAttributes.map(
-                    (attribute) =>
-                      course.people![personName].attributes[attribute],
+                (course.attributes![attribute].quickDeletable
+                  ? [""]
+                  : []
+                ).concat(
+                  [
+                    personName,
+                    course.people![personName].present ? "נוכח/ת" : "חסר/ה",
+                    course.people![personName].absenceReason ?? "",
+                    course.people![personName].location ?? "",
+                  ].concat(
+                    otherAttributes.map(
+                      (attribute) =>
+                        course.people![personName].attributes[attribute],
+                    ),
                   ),
-                )),
+                ),
               ),
             }}
             renderValue={(rowIndex, columnName, value) => {
@@ -253,13 +269,19 @@ const FilteredPeoplePage = () => {
                     <ActionIcon
                       color="red"
                       onClick={() => {
-                        updateCourse(
-                          {
-                            [`people.${filteredNames[rowIndex]}.attributes.${attribute}`]:
-                              deleteField(),
-                          },
-                          setLoading,
-                        )
+                        modals.openConfirmModal({
+                          title: "אנא וודאו את פעולתכם!",
+                          children: `האם אתם בטוחים שברצונכם להסיר את ${filteredNames[rowIndex]} מה${attribute}?`,
+                          labels: { confirm: "אישור", cancel: "ביטול" },
+                          onConfirm: () =>
+                            updateCourse(
+                              {
+                                [`people.${filteredNames[rowIndex]}.attributes.${attribute}`]:
+                                  deleteField(),
+                              },
+                              setLoading,
+                            ),
+                        })
                       }}
                       loading={loading}
                     >
@@ -271,12 +293,40 @@ const FilteredPeoplePage = () => {
 
               if (columnName === "שם") {
                 return (
-                  <LinkAnchor
-                    key={rowIndex}
-                    href={`/people/${filteredNames[rowIndex]}`}
-                  >
-                    {filteredNames[rowIndex]}
-                  </LinkAnchor>
+                  <React.Fragment key={rowIndex}>
+                    {Object.keys(course.attributes ?? {})
+                      .filter(
+                        (a) =>
+                          course.attributes![a].isButton &&
+                          course.people![filteredNames[rowIndex]].attributes[
+                            a
+                          ] !== undefined,
+                      )
+                      .sort()
+                      .map((attributeName, attributeIndex) => (
+                        <ActionIcon
+                          variant="transparent"
+                          ml={5}
+                          key={attributeIndex}
+                          component="a"
+                          href={
+                            course.people![filteredNames[rowIndex]].attributes[
+                              attributeName
+                            ]
+                          }
+                        >
+                          <FontAwesome
+                            icon={
+                              course.attributes![attributeName]
+                                .icon as FontAwesomeIcon
+                            }
+                          />
+                        </ActionIcon>
+                      ))}
+                    <LinkAnchor href={`/people/${filteredNames[rowIndex]}`}>
+                      {filteredNames[rowIndex]}
+                    </LinkAnchor>
+                  </React.Fragment>
                 )
               }
 

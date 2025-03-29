@@ -21,6 +21,7 @@ const AddAttribute = () => {
   const [derivativeAttributes, setDerivativeAttributes] = useState<string[]>([])
   const [filterable, setFilterable] = useState(true)
   const [quickDeletable, setQuickDeletable] = useState(false)
+  const [isButton, setIsButton] = useState(false)
   const [isLocation, setIsLocation] = useState(false)
   const [isNumber, setIsNumber] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -37,6 +38,7 @@ const AddAttribute = () => {
       setIsLocation(course.attributes[name].isLocation ?? false)
       setIsNumber(course.attributes[name].isNumber ?? false)
       setColor(course.attributes[name].color ?? "")
+      setIsButton(course.attributes[name].isButton ?? false)
       setDerivativeAttributes(
         course.attributes[name].derivativeAttributes ?? [],
       )
@@ -48,6 +50,7 @@ const AddAttribute = () => {
       setIsLocation(false)
       setIsNumber(false)
       setColor("")
+      setIsButton(false)
       setDerivativeAttributes([])
     }
   }, [name])
@@ -115,6 +118,12 @@ const AddAttribute = () => {
         checked={isLocation}
         onChange={(e) => setIsLocation(e.currentTarget.checked)}
       />
+      <Checkbox
+        mt="xs"
+        label="מוצג ככפתור (לדוגמה טלפון)"
+        checked={isButton}
+        onChange={(e) => setIsButton(e.currentTarget.checked)}
+      />
       <Button
         mt="xs"
         fullWidth
@@ -134,6 +143,7 @@ const AddAttribute = () => {
             filterable,
             quickDeletable,
             isNumber,
+            isButton,
             derivativeAttributes,
           }
           setCourse(course, setLoading)?.then(() => setName(""))
