@@ -315,7 +315,10 @@ const FilteredPeoplePage = () => {
                           course.attributes![a].isButton &&
                           course.people![filteredNames[rowIndex]].attributes[
                             a
-                          ] !== undefined,
+                          ] !== undefined &&
+                          course.people![filteredNames[rowIndex]].attributes[
+                            a
+                          ] !== "",
                       )
                       .sort()
                       .map((attributeName, attributeIndex) => (
