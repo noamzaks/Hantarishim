@@ -57,6 +57,15 @@ const AssignmentPage = () => {
         <b>תאריך הגשה:</b> {assignment.due}
       </p>
       <p>
+        <b>לא הגישו:</b>{" "}
+        {filteredPeople
+          .filter(
+            (personName) =>
+              !course.people![personName].submitted.includes(assignmentName),
+          )
+          .join(", ")}
+      </p>
+      <p>
         <b>יעדים:</b> {assignment.targets}
         {assignment.attribute ? ` (${assignment.attribute})` : ""}
       </p>
