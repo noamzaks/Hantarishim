@@ -23,6 +23,15 @@ const AssignmentPage = () => {
   const assignmentName = params.assignment!
   const assignment = course.assignments!.find((a) => a.name === assignmentName)!
 
+  if (!assignment) {
+    return (
+      <>
+        אופס, המטלה הזאת לא נמצאה ({assignmentName}) (
+        {course.assignments?.map((a) => a.name)?.join(", ")})
+      </>
+    )
+  }
+
   const people = Object.keys(course.people ?? {})
     .filter(
       assignment.kind === "person"
@@ -56,15 +65,20 @@ const AssignmentPage = () => {
       <p>
         <b>תאריך הגשה:</b> {assignment.due}
       </p>
-      <p>
-        <b>לא הגישו:</b>{" "}
-        {filteredPeople
-          .filter(
-            (personName) =>
-              !course.people![personName].submitted?.includes(assignmentName),
-          )
-          .join(", ")}
-      </p>
+      {filteredPeople.filter(
+        (personName) =>
+          !course.people![personName].submitted?.includes(assignmentName),
+      ).length < 100 && (
+        <p>
+          <b>לא הגישו:</b>{" "}
+          {filteredPeople
+            .filter(
+              (personName) =>
+                !course.people![personName].submitted?.includes(assignmentName),
+            )
+            .join(", ")}
+        </p>
+      )}
       <p>
         <b>יעדים:</b> {assignment.targets}
         {assignment.attribute ? ` (${assignment.attribute})` : ""}

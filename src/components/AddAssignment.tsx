@@ -131,7 +131,7 @@ const AddAssignment = () => {
           const assignment: Assignment = {
             kind,
             targets,
-            name,
+            name: name.trim(),
             description,
             due,
             attribute,

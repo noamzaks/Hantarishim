@@ -6,6 +6,27 @@ import Footer from "./components/Footer"
 import Router from "./Router"
 import { Notifications } from "@mantine/notifications"
 import { ModalsProvider } from "@mantine/modals"
+import { ErrorBoundary } from "react-error-boundary"
+
+const ErrorDisplay = ({ error }: { error: any }) => {
+  return (
+    <>
+      <h1>אוי לא, הייתה שגיאה!</h1>
+      <p>אנחנו מתנצלים.</p>
+      <p>
+        אתם יכולים לנסות לסגור ולפתוח את האפליקציה 3 פעמים ואז היא מתעדכנת וזה
+        עשוי לפתור את השגיאה.
+      </p>
+      <p>
+        תשלחו לנו צילום מסך בבקשה (או יותר טוב, תעתיקו את כל הטקסט היפה כאן
+        למטה).
+      </p>
+      <pre dir="ltr" style={{ overflow: "auto" }}>
+        <code>{error?.message + "\n" + error?.stack}</code>
+      </pre>
+    </>
+  )
+}
 
 const App = () => {
   const colorScheme = useColorScheme()
@@ -38,7 +59,9 @@ const App = () => {
                 paddingBottom: 20,
               }}
             >
-              <Router />
+              <ErrorBoundary FallbackComponent={ErrorDisplay}>
+                <Router />
+              </ErrorBoundary>
             </main>
             <Footer />
           </ModalsProvider>
