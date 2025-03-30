@@ -1,4 +1,5 @@
 import {
+  ActionIcon,
   Button,
   Checkbox,
   Table,
@@ -113,6 +114,18 @@ const DataTable = ({
         maw="100%"
         placeholder="חיפוש"
         leftSection={<FontAwesome icon="magnifying-glass" />}
+        rightSection={
+          search !== "" ? (
+            <ActionIcon
+              onClick={() => setSearch("")}
+              variant="transparent"
+              color="default"
+              size={15}
+            >
+              <FontAwesome icon="xmark" />
+            </ActionIcon>
+          ) : undefined
+        }
         value={search}
         onChange={(e) => setSearch(e.currentTarget.value)}
       />
