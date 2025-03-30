@@ -4,6 +4,7 @@ import FontAwesome from "../components/FontAwesome"
 import LinkAnchor from "../components/LinkAnchor"
 import { getLocalStorage } from "../lib/utilities"
 import { getAttributes, useCourse } from "../models"
+import { getUpdater } from "../utilities"
 
 const pad = (s: string, c: number) => s.padStart(c, "0")
 
@@ -34,8 +35,10 @@ const SelectedPage = () => {
             loading={loading}
             onClick={() => {
               const updates: Record<string, string> = {}
+              const updater = getUpdater()
               for (const name of names) {
                 updates[`people.${name}.absenceReason`] = absenceReason
+                updates[`people.${name}.absenceReasonUpdater`] = updater
               }
               updateCourse(updates, setLoading)
             }}

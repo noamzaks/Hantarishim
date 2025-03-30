@@ -8,6 +8,7 @@ import DataTable from "../components/DataTable"
 import LinkAnchor from "../components/LinkAnchor"
 import { arrayRemove, arrayUnion } from "firebase/firestore"
 import { useLocalStorage } from "../lib/hooks"
+import { getUpdater } from "../utilities"
 
 const PersonPage = () => {
   const [course, _, updateCourse] = useCourse()
@@ -65,7 +66,10 @@ const PersonPage = () => {
             checked={info.present ?? false}
             onChange={(e) => {
               updateCourse(
-                { [`people.${name}.present`]: e.currentTarget.checked },
+                {
+                  [`people.${name}.present`]: e.currentTarget.checked,
+                  [`people.${name}.presenceUpdater`]: getUpdater(),
+                },
                 setLoading,
               )
             }}
@@ -81,7 +85,10 @@ const PersonPage = () => {
                 loading={loading}
                 onClick={() => {
                   updateCourse(
-                    { [`people.${name}.absenceReason`]: absenceReason },
+                    {
+                      [`people.${name}.absenceReason`]: absenceReason,
+                      [`people.${name}.absenceReasonUpdater`]: getUpdater(),
+                    },
                     setLoading,
                   )
                 }}

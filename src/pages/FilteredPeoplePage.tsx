@@ -27,6 +27,7 @@ import { useLocalStorage } from "../lib/hooks"
 import AbsenceEditor from "../components/AbsenceEditor"
 import { deleteField } from "firebase/firestore"
 import { modals } from "@mantine/modals"
+import { getUpdater } from "../utilities"
 
 const ATTENDANCE_ID = "attendance"
 
@@ -41,7 +42,7 @@ const FilteredPeoplePage = () => {
   const [addName, setAddName] = useState("")
   const [loadAddName, setLoadAddName] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [course, setCourse, updateCourse] = useCourse()
+  const [course, _, updateCourse] = useCourse()
   const params = useParams()
   const navigate = useNavigate()
 
@@ -178,11 +179,12 @@ const FilteredPeoplePage = () => {
                 loading={resettingPresence}
                 leftSection={<FontAwesome icon="rotate-left" />}
                 onClick={() => {
+                  const updates: Record<string, any> = {}
                   for (const name of filteredNames) {
-                    course.people![name].present = false
-                    course.people![name].location = ""
+                    updates[`people.${name}.present`] = false
+                    updates[`people.${name}.location`] = ""
                   }
-                  setCourse(course, setResettingPresence)
+                  updateCourse(updates, setResettingPresence)
                 }}
               >
                 איפוס נוכחות
@@ -345,45 +347,83 @@ const FilteredPeoplePage = () => {
               }
 
               if (columnName === "נוכחות") {
+                const presenceUpdater =
+                  course.people![filteredNames[rowIndex]].presenceUpdater ?? ""
                 return (
-                  <Switch
-                    size="md"
-                    offLabel="חסר/ה"
-                    onLabel="נוכח/ת"
+                  <div
                     key={rowIndex}
-                    checked={
-                      course.people![filteredNames[rowIndex]].present ?? false
-                    }
-                    onChange={(e) => {
-                      const updates: Record<string, any> = {
-                        [`people.${filteredNames[rowIndex]}.present`]:
-                          e.currentTarget.checked,
-                      }
-                      updates[`people.${filteredNames[rowIndex]}.location`] = e
-                        .currentTarget.checked
-                        ? myLocation
-                        : ""
-                      updateCourse(updates, setLoading)
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
                     }}
-                  />
+                  >
+                    <Switch
+                      my={6}
+                      size="md"
+                      offLabel="חסר/ה"
+                      onLabel="נוכח/ת"
+                      checked={
+                        course.people![filteredNames[rowIndex]].present ?? false
+                      }
+                      onChange={(e) => {
+                        const updates: Record<string, any> = {
+                          [`people.${filteredNames[rowIndex]}.present`]:
+                            e.currentTarget.checked,
+                          [`people.${filteredNames[rowIndex]}.presenceUpdater`]:
+                            getUpdater(),
+                        }
+                        updates[`people.${filteredNames[rowIndex]}.location`] =
+                          e.currentTarget.checked ? myLocation : ""
+                        updateCourse(updates, setLoading)
+                      }}
+                    />
+                    {value !== "חסר/ה" && presenceUpdater !== "" && (
+                      <span
+                        style={{ marginTop: 5, fontSize: 10, opacity: 0.7 }}
+                      >
+                        {presenceUpdater}
+                      </span>
+                    )}
+                  </div>
                 )
               }
 
               if (columnName === "סיבת היעדרות") {
+                const absenceReasonUpdater =
+                  course.people![filteredNames[rowIndex]]
+                    .absenceReasonUpdater ?? ""
                 return (
-                  <AbsenceEditor
+                  <div
                     key={rowIndex}
-                    defaultValue={value}
-                    setValue={(v, setLoading) =>
-                      updateCourse(
-                        {
-                          [`people.${filteredNames[rowIndex]}.absenceReason`]:
-                            v,
-                        },
-                        setLoading,
-                      )
-                    }
-                  />
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
+                  >
+                    <AbsenceEditor
+                      defaultValue={value}
+                      setValue={(v, setLoading) =>
+                        updateCourse(
+                          {
+                            [`people.${filteredNames[rowIndex]}.absenceReason`]:
+                              v,
+                            [`people.${filteredNames[rowIndex]}.absenceReasonUpdater`]:
+                              getUpdater(),
+                          },
+                          setLoading,
+                        )
+                      }
+                    />
+                    {value !== "" && absenceReasonUpdater !== "" && (
+                      <span
+                        style={{ marginTop: 5, fontSize: 10, opacity: 0.7 }}
+                      >
+                        {absenceReasonUpdater}
+                      </span>
+                    )}
+                  </div>
                 )
               }
 

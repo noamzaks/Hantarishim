@@ -5,7 +5,11 @@ import { emailToUsername } from "./lib/utilities"
 
 export interface Person {
   absenceReason?: string
+  // The person and time in which the absence reason was updated.
+  absenceReasonUpdater?: string
   present: boolean
+  // The person and time in which the presence was updated.
+  presenceUpdater?: string
   location?: string
   attributes: Record<string, string>
   submitted: string[]
