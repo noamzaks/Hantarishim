@@ -61,7 +61,7 @@ const AssignmentPage = () => {
         {filteredPeople
           .filter(
             (personName) =>
-              !course.people![personName].submitted.includes(assignmentName),
+              !course.people![personName].submitted?.includes(assignmentName),
           )
           .join(", ")}
       </p>
@@ -91,7 +91,9 @@ const AssignmentPage = () => {
                         course.people![person].attributes[filterAttribute],
                     ),
                   ),
-                ].sort()
+                ]
+                  .filter((x) => x !== undefined)
+                  .sort()
               : []
           }
           value={filterValue}
