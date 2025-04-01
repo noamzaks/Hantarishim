@@ -2,9 +2,10 @@ import { Fieldset, TextInput, Button, Autocomplete } from "@mantine/core"
 import { useEffect, useState } from "react"
 import { getAttributes, useCourse } from "../models"
 import FontAwesome, { FontAwesomeIcon } from "./FontAwesome"
+import { deleteField } from "firebase/firestore"
 
 const AddPerson = () => {
-  const [course, setCourse] = useCourse()
+  const [course, updateCourse] = useCourse()
   const [name, setName] = useState("")
   const [attributes, setAttributes] = useState<Record<string, string>>({})
   const [loading, setLoading] = useState(false)
@@ -78,15 +79,16 @@ const AddPerson = () => {
         }
         loading={loading}
         onClick={() => {
-          if (!course.people) {
-            course.people = {}
-          }
-          course.people[name] = {
-            attributes,
-            present: false,
-            submitted: [],
-          }
-          setCourse(course, setLoading)?.then(() => {
+          updateCourse(
+            {
+              [`people.${name}`]: {
+                attributes,
+                present: false,
+                submitted: [],
+              },
+            },
+            setLoading,
+          )?.then(() => {
             setName("")
             setAttributes({})
           })
@@ -102,7 +104,10 @@ const AddPerson = () => {
           color="red"
           onClick={() => {
             delete course.people![name]
-            setCourse(course, setLoading, false)?.then(() => {
+            updateCourse(
+              { [`people.${name}`]: deleteField() },
+              setLoading,
+            )?.then(() => {
               setName("")
               setAttributes({})
             })

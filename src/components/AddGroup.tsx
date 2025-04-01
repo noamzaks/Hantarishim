@@ -2,9 +2,10 @@ import { useEffect, useState } from "react"
 import { useCourse } from "../models"
 import { Autocomplete, Button, Fieldset, TagsInput } from "@mantine/core"
 import FontAwesome from "./FontAwesome"
+import { deleteField } from "firebase/firestore"
 
 const AddGroup = () => {
-  const [course, setCourse] = useCourse()
+  const [course, updateCourse] = useCourse()
   const [name, setName] = useState("")
   const [people, setPeople] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
@@ -45,11 +46,7 @@ const AddGroup = () => {
         }
         loading={loading}
         onClick={() => {
-          if (!course.groups) {
-            course.groups = {}
-          }
-          course.groups[name] = people
-          setCourse(course, setLoading)?.then(() => {
+          updateCourse({ [`groups.${name}`]: people }, setLoading)?.then(() => {
             setName("")
           })
         }}
@@ -64,7 +61,10 @@ const AddGroup = () => {
           color="red"
           onClick={() => {
             delete course.groups![name]
-            setCourse(course, setLoading, false)?.then(() => setName(""))
+            updateCourse(
+              { [`groups.${name}`]: deleteField() },
+              setLoading,
+            )?.then(() => setName(""))
           }}
         >
           מחיקה

@@ -12,7 +12,7 @@ const SelectedPage = () => {
   const [absenceReason, setAbsenceReason] = useState("")
   const [loading, setLoading] = useState(false)
   const [loadingIncrement, setLoadingIncrement] = useState(false)
-  const [course, setCourse, updateCourse] = useCourse()
+  const [course, updateCourse] = useCourse()
 
   const names: string[] = getLocalStorage("Selected", [])
 
@@ -57,15 +57,16 @@ const SelectedPage = () => {
             leftSection={<FontAwesome icon="wand-magic-sparkles" />}
             loading={loadingIncrement}
             onClick={() => {
+              const updates: Record<string, any> = {}
               for (const name of names) {
-                course.people![name].attributes[attribute] = pad(
+                updates[`people.${name}.attributes.${attribute}`] = pad(
                   (
                     parseInt(course.people![name].attributes[attribute], 10) + 1
                   ).toString(),
                   3,
                 )
               }
-              setCourse({ ...course }, setLoadingIncrement)
+              updateCourse(updates, setLoadingIncrement)
             }}
           >
             הוספת 1 ל{attribute}

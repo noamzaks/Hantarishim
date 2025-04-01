@@ -4,7 +4,7 @@ import { useState } from "react"
 import { useCourse } from "../models"
 
 const DropCSV = () => {
-  const [course, setCourse] = useCourse()
+  const [course, updateCourse] = useCourse()
   const [loading, setLoading] = useState(false)
 
   return (
@@ -47,7 +47,7 @@ const DropCSV = () => {
             }
           }
 
-          setCourse(course, setLoading)
+          updateCourse({ people: course.people }, setLoading)
         } finally {
           setLoading(false)
         }

@@ -42,7 +42,7 @@ const FilteredPeoplePage = () => {
   const [addName, setAddName] = useState("")
   const [loadAddName, setLoadAddName] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [course, _, updateCourse] = useCourse()
+  const [course, updateCourse] = useCourse()
   const params = useParams()
   const navigate = useNavigate()
 

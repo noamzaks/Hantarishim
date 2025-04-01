@@ -14,7 +14,7 @@ import { useEffect, useState } from "react"
 import React from "react"
 
 const FormPage = () => {
-  const [course, setCourse] = useCourse()
+  const [course, updateCourse] = useCourse()
   const [loading, setLoading] = useState(false)
   const params = useParams()
   const formName = params.form!
@@ -137,7 +137,7 @@ const FormPage = () => {
             leftSection={<FontAwesome icon="floppy-disk" />}
             onClick={() => {
               form.questions = questions
-              setCourse(course, setLoading)
+              updateCourse({ forms: course.forms }, setLoading)
             }}
             fullWidth
             loading={loading}

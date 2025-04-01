@@ -8,7 +8,7 @@ import { arrayRemove, arrayUnion } from "firebase/firestore"
 import { useLocalStorage } from "../lib/hooks"
 
 const AssignmentPage = () => {
-  const [course, _, updateCourse] = useCourse()
+  const [course, updateCourse] = useCourse()
   const params = useParams()
   const [loading, setLoading] = useState(false)
   const [filterAttribute, setFilterAttribute] = useLocalStorage<string | null>({

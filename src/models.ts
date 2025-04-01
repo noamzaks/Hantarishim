@@ -1,4 +1,4 @@
-import { doc, setDoc, updateDoc } from "firebase/firestore"
+import { doc, updateDoc } from "firebase/firestore"
 import { createContext, useContext } from "react"
 import { auth, firestore } from "./firebase"
 import { emailToUsername } from "./lib/utilities"
@@ -76,6 +76,7 @@ export interface Course {
   groups?: {
     [name: string]: string[]
   }
+  locked?: boolean
 }
 
 export const CourseContext = createContext<Course>({})
@@ -83,31 +84,12 @@ export const CourseContext = createContext<Course>({})
 export const useCourse = (): [
   Course,
   (
-    d: Course,
-    setLoading?: (l: boolean) => void,
-    merge?: boolean,
-  ) => Promise<void> | undefined,
-  (
     updates: any,
     setLoading?: (l: boolean) => void,
   ) => Promise<void> | undefined,
 ] => [
   useContext(CourseContext),
-  (d: Course, setLoading?: (l: boolean) => void, merge = true) => {
-    setLoading?.(true)
-    try {
-      return setDoc(
-        doc(firestore, `/users/${emailToUsername(auth.currentUser!.email!)}`),
-        d,
-        { merge },
-      )
-        .then(() => setLoading?.(false))
-        .catch(() => setLoading?.(false))
-    } catch (ignored) {
-      setLoading?.(false)
-    }
-  },
-  (updates: any, setLoading?: (l: boolean) => void) => {
+  (updates: Record<string, any>, setLoading?: (l: boolean) => void) => {
     setLoading?.(true)
     try {
       return updateDoc(

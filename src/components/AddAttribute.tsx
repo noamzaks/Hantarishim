@@ -9,12 +9,13 @@ import {
   Select,
 } from "@mantine/core"
 import { useEffect, useState } from "react"
-import { getAttributes, useCourse } from "../models"
+import { Attribute, getAttributes, useCourse } from "../models"
 import FontAwesome from "./FontAwesome"
 import IconPicker from "./IconPicker"
+import { deleteField } from "firebase/firestore"
 
 const AddAttribute = () => {
-  const [course, setCourse] = useCourse()
+  const [course, updateCourse] = useCourse()
   const [name, setName] = useState("")
   const [icon, setIcon] = useState("")
   const [color, setColor] = useState("")
@@ -143,22 +144,23 @@ const AddAttribute = () => {
         }
         loading={loading}
         onClick={() => {
-          if (!course.attributes) {
-            course.attributes = {}
-          }
-          course.attributes[name] = {
-            icon,
-            color,
-            priority: parseInt(priority, 10),
-            isLocation,
-            filterable,
-            quickDeletable,
-            defaultSort,
-            isNumber,
-            isButton,
-            derivativeAttributes,
-          }
-          setCourse(course, setLoading)?.then(() => setName(""))
+          updateCourse(
+            {
+              [`attributes.${name}`]: {
+                icon,
+                color,
+                priority: parseInt(priority, 10),
+                isLocation,
+                filterable,
+                quickDeletable,
+                defaultSort,
+                isNumber,
+                isButton,
+                derivativeAttributes,
+              } as Attribute,
+            },
+            setLoading,
+          )?.then(() => setName(""))
         }}
       >
         {hasName ? "עריכה" : "הוספה"}
@@ -170,8 +172,10 @@ const AddAttribute = () => {
           leftSection={<FontAwesome icon="trash" />}
           color="red"
           onClick={() => {
-            delete course.attributes![name]
-            setCourse(course, setLoading, false)?.then(() => setName(""))
+            updateCourse(
+              { [`attributes.${name}`]: deleteField() },
+              setLoading,
+            )?.then(() => setName(""))
           }}
         >
           מחיקה

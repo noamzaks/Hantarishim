@@ -12,7 +12,7 @@ import FontAwesome from "./FontAwesome"
 import { useEffect, useState } from "react"
 
 const AddAssignment = () => {
-  const [course, _, updateCourse] = useCourse()
+  const [course, updateCourse] = useCourse()
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
   const [due, setDue] = useState("")

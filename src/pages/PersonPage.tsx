@@ -11,7 +11,7 @@ import { useLocalStorage } from "../lib/hooks"
 import { getUpdater } from "../utilities"
 
 const PersonPage = () => {
-  const [course, _, updateCourse] = useCourse()
+  const [course, updateCourse] = useCourse()
   const params = useParams()
   const [loading, setLoading] = useState(false)
   const [submittingAssignment, setSubmittingAssignment] = useState(false)

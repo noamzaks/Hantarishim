@@ -10,7 +10,7 @@ import FontAwesome from "./FontAwesome"
 import { useEffect, useState } from "react"
 
 const AddForm = () => {
-  const [course, setCourse] = useCourse()
+  const [course, updateCourse] = useCourse()
   const [name, setName] = useState("")
   const [kind, setKind] = useState<"person" | "attribute" | "group">(
     "attribute",
@@ -113,7 +113,9 @@ const AddForm = () => {
             course.forms.push(form)
           }
 
-          setCourse(course, setLoading)?.then(() => setName(""))
+          updateCourse({ forms: course.forms }, setLoading)?.then(() =>
+            setName(""),
+          )
         }}
       >
         {hasForm ? "עריכה" : "הוספה"}
@@ -126,7 +128,9 @@ const AddForm = () => {
           color="red"
           onClick={() => {
             course.forms = course.forms?.filter((form) => form.name !== name)
-            setCourse(course, setLoading, false)?.then(() => setName(""))
+            updateCourse({ forms: course.forms }, setLoading)?.then(() =>
+              setName(""),
+            )
           }}
         >
           מחיקה
