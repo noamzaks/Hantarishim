@@ -5,11 +5,11 @@ import {
   Select,
   TagsInput,
   Textarea,
-  TextInput,
 } from "@mantine/core"
 import { Assignment, getAttributes, useCourse } from "../models"
 import FontAwesome from "./FontAwesome"
 import { useEffect, useState } from "react"
+import { DateTimePicker } from "@mantine/dates"
 
 const AddAssignment = () => {
   const [course, updateCourse] = useCourse()
@@ -63,7 +63,7 @@ const AddAssignment = () => {
   }, [name])
 
   return (
-    <Fieldset legend="הוספת/עריכת מטלה">
+    <Fieldset legend="הוספת/עריכת מטלה" mt="xs">
       <Autocomplete
         label="שם"
         value={name}
@@ -76,12 +76,12 @@ const AddAssignment = () => {
         value={description}
         onChange={(e) => setDescription(e.currentTarget.value)}
       />
-      <TextInput
+      <DateTimePicker
         mt="xs"
         leftSection={<FontAwesome icon="calendar" />}
         label="תאריך הגשה"
-        value={due}
-        onChange={(e) => setDue(e.currentTarget.value)}
+        value={due === "" ? null : new Date(due)}
+        onChange={(v) => setDue(v?.toISOString() ?? "")}
       />
       <Select
         mt="xs"

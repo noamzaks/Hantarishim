@@ -63,7 +63,10 @@ const AssignmentPage = () => {
         {assignment.description}
       </p>
       <p>
-        <b>תאריך הגשה:</b> {assignment.due}
+        <b>תאריך הגשה:</b>{" "}
+        {assignment.due === ""
+          ? assignment.due
+          : new Date(assignment.due).toLocaleString("he-il")}
       </p>
       {filteredPeople.filter(
         (personName) =>

@@ -7,6 +7,7 @@ import Router from "./Router"
 import { Notifications } from "@mantine/notifications"
 import { ModalsProvider } from "@mantine/modals"
 import { ErrorBoundary } from "react-error-boundary"
+import { DatesProvider } from "@mantine/dates"
 
 const ErrorDisplay = ({ error }: { error: any }) => {
   return (
@@ -39,31 +40,39 @@ const App = () => {
           theme={{ fontFamily: "IBM Plex Sans Hebrew" }}
         >
           <ModalsProvider>
-            <Notifications />
-
-            <Header
-              links={[
-                { url: "/people", title: "אנשים", icon: "user-group" },
-                // { url: "/groups", title: "קבוצות", icon: "users" },
-                { url: "/assignments", title: "מטלות", icon: "file-lines" },
-                // { url: "/forms", title: "סקרים", icon: "highlighter" },
-                { url: "/settings", title: "הגדרות", icon: "gear" },
-              ]}
-            />
-            <main
-              style={{
-                flexGrow: 1,
-                overflow: "auto",
-                paddingRight: 10,
-                paddingLeft: 10,
-                paddingBottom: 20,
+            <DatesProvider
+              settings={{
+                locale: "he",
+                weekendDays: [5, 6],
+                firstDayOfWeek: 0,
               }}
             >
-              <ErrorBoundary FallbackComponent={ErrorDisplay}>
-                <Router />
-              </ErrorBoundary>
-            </main>
-            <Footer />
+              <Notifications />
+
+              <Header
+                links={[
+                  { url: "/people", title: "אנשים", icon: "user-group" },
+                  // { url: "/groups", title: "קבוצות", icon: "users" },
+                  { url: "/assignments", title: "מטלות", icon: "file-lines" },
+                  // { url: "/forms", title: "סקרים", icon: "highlighter" },
+                  { url: "/settings", title: "הגדרות", icon: "gear" },
+                ]}
+              />
+              <main
+                style={{
+                  flexGrow: 1,
+                  overflow: "auto",
+                  paddingRight: 10,
+                  paddingLeft: 10,
+                  paddingBottom: 20,
+                }}
+              >
+                <ErrorBoundary FallbackComponent={ErrorDisplay}>
+                  <Router />
+                </ErrorBoundary>
+              </main>
+              <Footer />
+            </DatesProvider>
           </ModalsProvider>
         </MantineProvider>
       </DirectionProvider>

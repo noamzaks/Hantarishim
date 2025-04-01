@@ -9,6 +9,7 @@ import LinkAnchor from "../components/LinkAnchor"
 import { arrayRemove, arrayUnion } from "firebase/firestore"
 import { useLocalStorage } from "../lib/hooks"
 import { getUpdater } from "../utilities"
+import Countdown from "../components/Countdown"
 
 const PersonPage = () => {
   const [course, updateCourse] = useCourse()
@@ -152,7 +153,7 @@ const PersonPage = () => {
           head: ["שם", "תאריך הגשה", "הוגש", "תיאור"],
           body: assignments.map((assignment) => [
             assignment.name,
-            assignment.due,
+            assignment.due === "" ? assignment.due : assignment.due,
             info.submitted.includes(assignment.name) ? "כן" : "לא",
             assignment.description,
           ]),
@@ -163,6 +164,25 @@ const PersonPage = () => {
               <LinkAnchor key={rowIndex} href={`/assignments/${value}`}>
                 {value}
               </LinkAnchor>
+            )
+          }
+
+          if (columnName === "תאריך הגשה") {
+            if (value === "") {
+              return <React.Fragment key={rowIndex}>{value}</React.Fragment>
+            }
+            const d = new Date(value)
+            return (
+              <span
+                key={rowIndex}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                <span>{d.toLocaleString("he-il")}</span>
+                <Countdown date={d} />
+              </span>
             )
           }
 
