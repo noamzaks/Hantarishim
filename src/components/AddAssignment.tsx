@@ -12,7 +12,7 @@ import FontAwesome from "./FontAwesome"
 import { useEffect, useState } from "react"
 
 const AddAssignment = () => {
-  const [course, setCourse] = useCourse()
+  const [course, _, updateCourse] = useCourse()
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
   const [due, setDue] = useState("")
@@ -146,7 +146,9 @@ const AddAssignment = () => {
             course.assignments.push(assignment)
           }
 
-          setCourse(course, setLoading)?.then(() => setName(""))
+          updateCourse({ assignments: course.assignments }, setLoading)?.then(
+            () => setName(""),
+          )
         }}
       >
         {hasAssignment ? "עריכה" : "הוספה"}
@@ -161,7 +163,9 @@ const AddAssignment = () => {
             course.assignments = course.assignments?.filter(
               (assignment) => assignment.name !== name,
             )
-            setCourse(course, setLoading, false)?.then(() => setName(""))
+            updateCourse({ assignments: course.assignments }, setLoading)?.then(
+              () => setName(""),
+            )
           }}
         >
           מחיקה

@@ -44,9 +44,9 @@ const App = () => {
             <Header
               links={[
                 { url: "/people", title: "אנשים", icon: "user-group" },
-                { url: "/groups", title: "קבוצות", icon: "users" },
+                // { url: "/groups", title: "קבוצות", icon: "users" },
                 { url: "/assignments", title: "מטלות", icon: "file-lines" },
-                { url: "/forms", title: "סקרים", icon: "highlighter" },
+                // { url: "/forms", title: "סקרים", icon: "highlighter" },
                 { url: "/settings", title: "הגדרות", icon: "gear" },
               ]}
             />
