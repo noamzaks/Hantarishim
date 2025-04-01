@@ -17,12 +17,15 @@ import PersonPage from "./pages/PersonPage"
 import AssignmentsPage from "./pages/AssignmentsPage"
 import AssignmentPage from "./pages/AssignmentPage"
 import { useCourseLoading } from "./models"
-import { Loader } from "@mantine/core"
+import { Alert, Loader } from "@mantine/core"
 import SelectedPage from "./pages/SelectedPage"
 import GroupsPage from "./pages/GroupsPage"
 import GroupPage from "./pages/GroupPage"
 import FormsPage from "./pages/FormsPage"
 import FormPage from "./pages/FormPage"
+import { useLocalStorage } from "./lib/hooks"
+import LinkAnchor from "./components/LinkAnchor"
+import FontAwesome from "./components/FontAwesome"
 
 const CourseLoader = () => {
   const loading = useCourseLoading()
@@ -49,6 +52,7 @@ const Router = () => {
   const [currentUser, loading] = useAuthState(auth)
   const navigate = useNavigate()
   const location = useLocation()
+  const [me] = useLocalStorage<string>({ key: "Me", defaultValue: "" })
 
   useEffect(() => {
     if (!loading && !currentUser && location.pathname !== "/login") {
@@ -71,6 +75,14 @@ const Router = () => {
   return (
     <CourseProvider>
       <CourseLoader />
+      {me === "" && location.pathname !== "/settings" && (
+        <Alert color="red" icon={<FontAwesome icon="exclamation" />} mt="xs">
+          אנא רשמו מי אתם{" "}
+          <LinkAnchor href="/settings" style={{ fontSize: "inherit" }}>
+            בהגדרות!
+          </LinkAnchor>
+        </Alert>
+      )}
       <Routes>
         <Route path="/" element={<Navigate to="/people" />} />
         <Route path="/people" element={<PeoplePage />} />
