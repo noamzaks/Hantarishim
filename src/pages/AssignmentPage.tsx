@@ -146,17 +146,17 @@ const AssignmentPage = () => {
                 label={value}
                 checked={value === "כן"}
                 disabled={loading}
-                onChange={(e) =>
+                onChange={(e) => {
                   updateCourse(
                     {
-                      [`people.${people[rowIndex]}.submitted`]: e.currentTarget
-                        .checked
+                      [`people.${filteredPeople[rowIndex]}.submitted`]: e
+                        .currentTarget.checked
                         ? arrayUnion(assignmentName)
                         : arrayRemove(assignmentName),
                     },
                     setLoading,
                   )
-                }
+                }}
               />
             )
           }
