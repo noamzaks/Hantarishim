@@ -13,7 +13,7 @@ export default defineConfig({
         short_name: "חנתרישים",
         theme_color: "#9775fa",
         background_color: "#9775fa",
-        icons: [{ src: "/icon.png", sizes: "256x256", type: "image/png" }],
+        icons: [{ src: "/logo.png", sizes: "256x256", type: "image/png" }],
       },
     }),
   ],
