@@ -430,6 +430,23 @@ const FilteredPeoplePage = () => {
                 )
               }
 
+              if ((course.attributes ?? {})[columnName]?.kind === "boolean") {
+                return (
+                  <Switch
+                    checked={value === "true"}
+                    onChange={(e) =>
+                      updateCourse(
+                        {
+                          [`people.${filteredNames[rowIndex]}.attributes.${columnName}`]:
+                            e.currentTarget.checked ? "true" : "false",
+                        },
+                        setLoading,
+                      )
+                    }
+                  />
+                )
+              }
+
               return <React.Fragment key={rowIndex}>{value}</React.Fragment>
             }}
           />

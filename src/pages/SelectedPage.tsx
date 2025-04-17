@@ -48,7 +48,7 @@ const SelectedPage = () => {
         }
       />
       {getAttributes(course)
-        .filter((attribute) => course.attributes![attribute].isNumber)
+        .filter((attribute) => course.attributes![attribute].kind === "number")
         .map((attribute, attributeIndex) => (
           <Button
             ml={5}

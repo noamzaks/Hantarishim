@@ -26,8 +26,8 @@ const AddAttribute = () => {
   const [quickDeletable, setQuickDeletable] = useState(false)
   const [isButton, setIsButton] = useState(false)
   const [isLocation, setIsLocation] = useState(false)
-  const [isNumber, setIsNumber] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [kind, setKind] = useState("string")
 
   const hasName = course.attributes && course.attributes[name] !== undefined
   const attributes = getAttributes(course)
@@ -39,7 +39,7 @@ const AddAttribute = () => {
       setFilterable(course.attributes[name].filterable ?? false)
       setQuickDeletable(course.attributes[name].quickDeletable ?? false)
       setIsLocation(course.attributes[name].isLocation ?? false)
-      setIsNumber(course.attributes[name].isNumber ?? false)
+      setKind(course.attributes[name].kind ?? "string")
       setColor(course.attributes[name].color ?? "")
       setIsButton(course.attributes[name].isButton ?? false)
       setDerivativeAttributes(
@@ -52,7 +52,7 @@ const AddAttribute = () => {
       setFilterable(true)
       setQuickDeletable(false)
       setIsLocation(false)
-      setIsNumber(false)
+      setKind("string")
       setColor("")
       setIsButton(false)
       setDerivativeAttributes([])
@@ -106,11 +106,15 @@ const AddAttribute = () => {
         value={derivativeAttributes}
         onChange={setDerivativeAttributes}
       />
-      <Checkbox
-        mt="xs"
-        label="מספרי (לדוגמה מספר התנדבויות)"
-        checked={isNumber}
-        onChange={(e) => setIsNumber(e.currentTarget.checked)}
+      <Select
+        label="סוג הפרמטר"
+        value={kind}
+        onChange={(v) => setKind(v ?? "string")}
+        data={[
+          { value: "string", label: "טקסט" },
+          { value: "number", label: "מספר" },
+          { value: "boolean", label: "כן/לא" },
+        ]}
       />
       <Checkbox
         mt="xs"
@@ -154,9 +158,9 @@ const AddAttribute = () => {
                 filterable,
                 quickDeletable,
                 defaultSort,
-                isNumber,
                 isButton,
                 derivativeAttributes,
+                kind,
               } as Attribute,
             },
             setLoading,

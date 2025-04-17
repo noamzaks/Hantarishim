@@ -8,6 +8,10 @@ import { Notifications } from "@mantine/notifications"
 import { ModalsProvider } from "@mantine/modals"
 import { ErrorBoundary } from "react-error-boundary"
 import { DatesProvider } from "@mantine/dates"
+import { useLocalStorage } from "./lib/hooks"
+import { useEffect } from "react"
+import { disableNetwork, enableNetwork } from "firebase/firestore"
+import { firestore } from "./firebase"
 
 const ErrorDisplay = ({ error }: { error: any }) => {
   return (
@@ -29,6 +33,23 @@ const ErrorDisplay = ({ error }: { error: any }) => {
   )
 }
 
+const LocalUpdater = () => {
+  const [localMode] = useLocalStorage<boolean>({
+    key: "Local Mode",
+    defaultValue: false,
+  })
+
+  useEffect(() => {
+    if (localMode) {
+      disableNetwork(firestore)
+    } else {
+      enableNetwork(firestore)
+    }
+  }, [localMode])
+
+  return <></>
+}
+
 const App = () => {
   const colorScheme = useColorScheme()
 
@@ -47,6 +68,7 @@ const App = () => {
                 firstDayOfWeek: 0,
               }}
             >
+              <LocalUpdater />
               <Notifications />
 
               <Header

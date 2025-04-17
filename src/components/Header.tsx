@@ -14,12 +14,18 @@ const Header = ({
   const navigate = useNavigate()
   const [currentUser, loading] = useAuthState(auth)
   const [me] = useLocalStorage<string>({ key: "Me", defaultValue: "" })
+  const [localMode] = useLocalStorage<boolean>({
+    key: "Local Mode",
+    defaultValue: false,
+  })
 
   return (
     <header
       style={{
         height: 60,
-        backgroundColor: "var(--mantine-color-violet-4)",
+        backgroundColor: localMode
+          ? "var(--mantine-color-green-7)"
+          : "var(--mantine-color-violet-4)",
         color: "white",
         flex: "none",
         display: "flex",
@@ -32,7 +38,7 @@ const Header = ({
         style={{ marginInline: 10, cursor: "pointer" }}
         onClick={() => navigate("/")}
       >
-        חנתרישים
+        חנתרישים{localMode ? " לא קל לי" : ""}
       </h3>
       {loading && (
         <>

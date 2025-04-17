@@ -29,47 +29,49 @@ const AddPerson = () => {
         data={Object.keys(course.people ?? {}).sort()}
       />
 
-      {getAttributes(course).map((attribute, attributeIndex) => (
-        <TextInput
-          key={attributeIndex}
-          label={attribute}
-          mt="xs"
-          value={attributes[attribute] ?? ""}
-          type={course.attributes![attribute].isNumber ? "number" : undefined}
-          onChange={(e) => {
-            const newAttributes = {
-              ...attributes,
-              [attribute]: e.currentTarget.value,
-            }
-            for (const derivativeAttribute of course.attributes![attribute]
-              .derivativeAttributes ?? []) {
-              let found = false
-              for (const person of Object.values(course.people ?? {})) {
-                if (
-                  person.attributes[attribute] === e.currentTarget.value &&
-                  person.attributes[derivativeAttribute]
-                ) {
-                  newAttributes[derivativeAttribute] =
+      {getAttributes(course).map((attribute, attributeIndex) => {
+        return (
+          <TextInput
+            key={attributeIndex}
+            label={attribute}
+            mt="xs"
+            value={attributes[attribute] ?? ""}
+            type={course.attributes![attribute].kind ? "number" : undefined}
+            onChange={(e) => {
+              const newAttributes = {
+                ...attributes,
+                [attribute]: e.currentTarget.value,
+              }
+              for (const derivativeAttribute of course.attributes![attribute]
+                .derivativeAttributes ?? []) {
+                let found = false
+                for (const person of Object.values(course.people ?? {})) {
+                  if (
+                    person.attributes[attribute] === e.currentTarget.value &&
                     person.attributes[derivativeAttribute]
-                  found = true
-                  break
+                  ) {
+                    newAttributes[derivativeAttribute] =
+                      person.attributes[derivativeAttribute]
+                    found = true
+                    break
+                  }
+                }
+                if (!found) {
+                  delete newAttributes[derivativeAttribute]
                 }
               }
-              if (!found) {
-                delete newAttributes[derivativeAttribute]
-              }
+              setAttributes(newAttributes)
+            }}
+            leftSection={
+              course.attributes![attribute].icon ? (
+                <FontAwesome
+                  icon={course.attributes![attribute].icon! as FontAwesomeIcon}
+                />
+              ) : undefined
             }
-            setAttributes(newAttributes)
-          }}
-          leftSection={
-            course.attributes![attribute].icon ? (
-              <FontAwesome
-                icon={course.attributes![attribute].icon! as FontAwesomeIcon}
-              />
-            ) : undefined
-          }
-        />
-      ))}
+          />
+        )
+      })}
 
       <Button
         mt="xs"

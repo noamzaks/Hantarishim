@@ -1,7 +1,9 @@
 import { doc, updateDoc } from "firebase/firestore"
 import { createContext, useContext } from "react"
 import { auth, firestore } from "./firebase"
-import { emailToUsername } from "./lib/utilities"
+import { emailToUsername, getLocalStorage } from "./lib/utilities"
+
+const SORTED_KINDS = ["boolean", "string", "number"]
 
 export interface Person {
   absenceReason?: string
@@ -47,8 +49,6 @@ export interface Attribute {
   filterable?: boolean
   // Whether there should be a trash icon in every line of the filter view, to quickly remove the attribute's value (instead of selection).
   quickDeletable?: boolean
-  // Whether the attribute is a number
-  isNumber?: boolean
   // Whether the attribute should appear as a button near the name.
   isButton?: boolean
   // Sorting value, larger is higher.
@@ -62,6 +62,7 @@ export interface Attribute {
   derivativeAttributes?: string[]
   // The attribute to sort by initially in filter views
   defaultSort?: string
+  kind?: "string" | "number" | "boolean"
 }
 
 export interface Course {
@@ -89,15 +90,20 @@ export const useCourse = (): [
   ) => Promise<void> | undefined,
 ] => [
   useContext(CourseContext),
-  (updates: Record<string, any>, setLoading?: (l: boolean) => void) => {
+  async (updates: Record<string, any>, setLoading?: (l: boolean) => void) => {
     setLoading?.(true)
     try {
-      return updateDoc(
+      const promise = updateDoc(
         doc(firestore, `/users/${emailToUsername(auth.currentUser!.email!)}`),
         updates,
       )
         .then(() => setLoading?.(false))
         .catch(() => setLoading?.(false))
+      if (!getLocalStorage("Local Mode", false)) {
+        await promise
+      } else {
+        setLoading?.(false)
+      }
     } catch (ignored) {
       setLoading?.(false)
     }
@@ -112,6 +118,12 @@ export const getAttributes = (course: Course) => {
   return Object.keys(course.attributes ?? {}).sort((a, b) => {
     const infoA = course.attributes![a]
     const infoB = course.attributes![b]
+    const kindA = infoA.kind ?? "string"
+    const kindB = infoB.kind ?? "string"
+    if (kindA !== kindB) {
+      return SORTED_KINDS.indexOf(kindA) - SORTED_KINDS.indexOf(kindB)
+    }
+
     if (infoA.filterable && !infoB.filterable) {
       return -1
     } else if (infoB.filterable && !infoA.filterable) {

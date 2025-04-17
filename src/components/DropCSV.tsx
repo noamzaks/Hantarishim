@@ -36,9 +36,13 @@ const DropCSV = () => {
               }
 
               course.people[personName] = {
+                // @ts-ignore
                 present: false,
+                // @ts-ignore
                 attributes: {},
+                // @ts-ignore
                 submitted: [],
+                ...((course.people ?? {})[personName] ?? {}),
               }
               for (let i = 0; i < attributeNames.length; i++) {
                 course.people[personName].attributes[attributeNames[i]] =
