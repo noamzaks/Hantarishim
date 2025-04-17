@@ -1,4 +1,4 @@
-import { ActionIcon, TextInput } from "@mantine/core"
+import { ActionIcon, Textarea } from "@mantine/core"
 import { useEffect, useState } from "react"
 import FontAwesome from "./FontAwesome"
 
@@ -22,7 +22,8 @@ const AbsenceEditor = ({
   }, [defaultValue])
 
   return (
-    <TextInput
+    <Textarea
+      autosize
       flex="none"
       miw="200"
       maw="300"
