@@ -147,3 +147,29 @@ export const getAttributes = (course: Course) => {
 export const CourseLoadingContext = createContext(false)
 
 export const useCourseLoading = () => useContext(CourseLoadingContext)
+
+export const getPeopleForAttribute = (
+  course: Course,
+  attribute: string,
+  attributeValue: string,
+) => {
+  let result = Object.keys(course.people ?? {})
+    .filter(
+      (personName) =>
+        course.people![personName].attributes[attribute] === attributeValue,
+    )
+    .sort()
+
+  const filterAttribute = getLocalStorage("Filter Attribute", null) as
+    | string
+    | null
+  const filterValue = getLocalStorage("Filter Value", null) as string | null
+  if (filterAttribute && filterValue) {
+    result = result.filter(
+      (personName) =>
+        course.people![personName].attributes[filterAttribute] === filterValue,
+    )
+  }
+
+  return result
+}

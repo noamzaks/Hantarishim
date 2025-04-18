@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom"
-import { getAttributes, useCourse } from "../models"
+import { useCourse } from "../models"
 import DataTable from "../components/DataTable"
-import { Autocomplete, Fieldset, Select, Switch } from "@mantine/core"
+import { Switch } from "@mantine/core"
 import React, { useState } from "react"
 import LinkAnchor from "../components/LinkAnchor"
 import { arrayRemove, arrayUnion } from "firebase/firestore"
@@ -11,11 +11,11 @@ const AssignmentPage = () => {
   const [course, updateCourse] = useCourse()
   const params = useParams()
   const [loading, setLoading] = useState(false)
-  const [filterAttribute, setFilterAttribute] = useLocalStorage<string | null>({
+  const [filterAttribute] = useLocalStorage<string | null>({
     key: "Filter Attribute",
     defaultValue: null,
   })
-  const [filterValue, setFilterValue] = useLocalStorage<string | undefined>({
+  const [filterValue] = useLocalStorage<string | undefined>({
     key: "Filter Value",
     defaultValue: undefined,
   })
@@ -86,38 +86,6 @@ const AssignmentPage = () => {
         <b>יעדים:</b> {assignment.targets}
         {assignment.attribute ? ` (${assignment.attribute})` : ""}
       </p>
-      <Fieldset legend="פילטור" display="flex" my="xs">
-        <Select
-          clearable
-          data={getAttributes(course).filter(
-            (attribute) => course.attributes![attribute].filterable,
-          )}
-          w="47.5%"
-          ml="5%"
-          value={filterAttribute}
-          onChange={setFilterAttribute}
-        />
-        <Autocomplete
-          w="47.5%"
-          data={
-            filterAttribute
-              ? [
-                  ...new Set(
-                    people.map(
-                      (person) =>
-                        course.people![person].attributes[filterAttribute],
-                    ),
-                  ),
-                ]
-                  .filter((x) => x !== undefined)
-                  .sort()
-              : []
-          }
-          value={filterValue}
-          onChange={setFilterValue}
-        />
-      </Fieldset>
-
       <h2>אנשים</h2>
       <DataTable
         tableName={assignmentName}

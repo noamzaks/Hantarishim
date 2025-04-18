@@ -6,6 +6,7 @@ import PersonChooser from "../components/PersonChooser"
 import { useCourse } from "../models"
 import { useState } from "react"
 import { useLocalStorage } from "../lib/hooks"
+import FilterPeople from "../components/FilterPeople"
 
 const SettingsPage = () => {
   const [course, updateCourse] = useCourse()
@@ -19,6 +20,7 @@ const SettingsPage = () => {
     <>
       <h1>הגדרות</h1>
       <PersonChooser />
+      <FilterPeople />
       {!localMode && (
         <Switch
           label="מצב לוקאלי (שינויים במכשיר הנוכחי בלבד, לא מתעדכן ולא מעדכן מכשירים אחרים)"

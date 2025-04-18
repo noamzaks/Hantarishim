@@ -1,5 +1,5 @@
 import FontAwesome, { FontAwesomeIcon } from "../components/FontAwesome"
-import { getAttributes, useCourse } from "../models"
+import { getAttributes, getPeopleForAttribute, useCourse } from "../models"
 import LinkButton from "../components/LinkButton"
 import React from "react"
 
@@ -34,7 +34,11 @@ const PeoplePage = () => {
               {attribute}
             </h2>
             {Array.from(attributeValues[attribute] ?? [])
-              .filter((x) => x !== "")
+              .filter(
+                (x) =>
+                  x !== "" &&
+                  getPeopleForAttribute(course, attribute, x).length !== 0,
+              )
               .sort()
               .map((attributeValue, attributeValueIndex) => (
                 <LinkButton

@@ -4,7 +4,7 @@ import FontAwesome from "../components/FontAwesome"
 export const usernameToEmail = (username: string) => username + "@noamzaks.com"
 export const emailToUsername = (email: string) => email.split("@")[0]
 
-export const getLocalStorage = (key: string, defaultValue = {}) => {
+export const getLocalStorage = (key: string, defaultValue: any = {}) => {
   return JSON.parse(localStorage.getItem(key) ?? JSON.stringify(defaultValue))
 }
 

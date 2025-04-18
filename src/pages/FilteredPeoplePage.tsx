@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom"
-import { getAttributes, useCourse } from "../models"
+import { getAttributes, getPeopleForAttribute, useCourse } from "../models"
 import {
   ActionIcon,
   Alert,
@@ -48,12 +48,7 @@ const FilteredPeoplePage = () => {
 
   const attribute = params.attribute!
   const attributeValue = params.value!
-  const filteredNames = Object.keys(course.people ?? {})
-    .filter(
-      (personName) =>
-        course.people![personName].attributes[attribute] === attributeValue,
-    )
-    .sort()
+  const filteredNames = getPeopleForAttribute(course, attribute, attributeValue)
 
   const present = filteredNames.filter(
     (personName) => course.people![personName].present,
