@@ -168,8 +168,9 @@ const FilteredPeoplePage = () => {
           <div
             style={{ display: "flex", alignItems: "center", marginBottom: 10 }}
           >
-            <Button.Group>
+            <Button.Group style={{ overflow: "auto" }}>
               <Button
+                flex="none"
                 variant="default"
                 loading={resettingPresence}
                 leftSection={<FontAwesome icon="rotate-left" />}
@@ -187,6 +188,7 @@ const FilteredPeoplePage = () => {
               {selectedRows.length !== 0 && (
                 <>
                   <Button
+                    flex="none"
                     variant="default"
                     leftSection={<FontAwesome icon="user-group" />}
                     onClick={() => {
@@ -200,6 +202,7 @@ const FilteredPeoplePage = () => {
                     עריכת מסומנים
                   </Button>
                   <Button
+                    flex="none"
                     variant="default"
                     leftSection={<FontAwesome icon="rotate-left" />}
                     onClick={() => {

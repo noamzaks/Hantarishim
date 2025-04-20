@@ -143,6 +143,7 @@ const DataTable = ({
               top: 0,
               backgroundColor:
                 colorScheme === "dark" ? theme.colors.dark[7] : "white",
+              zIndex: 101,
             }}
           >
             <Table.Tr h={1}>
