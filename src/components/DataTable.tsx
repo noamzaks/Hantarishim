@@ -146,7 +146,10 @@ const DataTable = ({
             <Table.Tr>
               {selectable && <Table.Th />}
               {displayData.head?.map((element, columnIndex) => (
-                <Table.Th key={columnIndex} style={{ padding: 0 }}>
+                <Table.Th
+                  key={columnIndex}
+                  style={{ padding: 0, verticalAlign: "top" }}
+                >
                   {element !== "" && (
                     <UnstyledButton
                       className="control"

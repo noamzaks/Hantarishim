@@ -455,57 +455,59 @@ const FilteredPeoplePage = () => {
               return <React.Fragment key={rowIndex}>{value}</React.Fragment>
             }}
           />
-          <Fieldset legend="שיוך" mt="xs">
-            <Autocomplete
-              value={addName}
-              onChange={setAddName}
-              label="שם"
-              data={Object.keys(course.people ?? {})
-                .filter(
-                  (name) => !filteredNames.includes(name) && name !== addName,
-                )
-                .sort()}
-            />
+          {(course.attributes ?? {})[attribute]?.quickDeletable && (
+            <Fieldset legend="שיוך" mt="xs">
+              <Autocomplete
+                value={addName}
+                onChange={setAddName}
+                label="שם"
+                data={Object.keys(course.people ?? {})
+                  .filter(
+                    (name) => !filteredNames.includes(name) && name !== addName,
+                  )
+                  .sort()}
+              />
 
-            <Button
-              fullWidth
-              mt="xs"
-              color={hasPersonToAdd ? "red" : undefined}
-              leftSection={
-                hasPersonToAdd ? (
-                  <FontAwesome icon="trash" />
-                ) : (
-                  <FontAwesome icon="plus" />
-                )
-              }
-              disabled={personToAdd === undefined}
-              onClick={() => {
-                updateCourse(
-                  {
-                    [`people.${addName}.attributes.${attribute}`]:
-                      hasPersonToAdd ? "" : attributeValue,
-                  },
-                  setLoadAddName,
-                )
-              }}
-              loading={loadAddName}
-            >
-              {hasPersonToAdd ? "הסרה" : "הוספה"}
-            </Button>
-            {personToAdd !== undefined && (
-              <Alert
-                color="yellow"
-                icon={<FontAwesome icon="circle-info" />}
+              <Button
+                fullWidth
                 mt="xs"
+                color={hasPersonToAdd ? "red" : undefined}
+                leftSection={
+                  hasPersonToAdd ? (
+                    <FontAwesome icon="trash" />
+                  ) : (
+                    <FontAwesome icon="plus" />
+                  )
+                }
+                disabled={personToAdd === undefined}
+                onClick={() => {
+                  updateCourse(
+                    {
+                      [`people.${addName}.attributes.${attribute}`]:
+                        hasPersonToAdd ? "" : attributeValue,
+                    },
+                    setLoadAddName,
+                  )
+                }}
+                loading={loadAddName}
               >
-                {attributes.map((attributeName, attributeIndex) => (
-                  <p key={attributeIndex}>
-                    {attributeName}: {personToAdd.attributes[attributeName]}
-                  </p>
-                ))}
-              </Alert>
-            )}
-          </Fieldset>
+                {hasPersonToAdd ? "הסרה" : "הוספה"}
+              </Button>
+              {personToAdd !== undefined && (
+                <Alert
+                  color="yellow"
+                  icon={<FontAwesome icon="circle-info" />}
+                  mt="xs"
+                >
+                  {attributes.map((attributeName, attributeIndex) => (
+                    <p key={attributeIndex}>
+                      {attributeName}: {personToAdd.attributes[attributeName]}
+                    </p>
+                  ))}
+                </Alert>
+              )}
+            </Fieldset>
+          )}
         </>
       )}
     </div>
