@@ -6,11 +6,13 @@ import {
   TableData,
   TextInput,
   UnstyledButton,
+  useMantineTheme,
 } from "@mantine/core"
 import React, { useState } from "react"
 import "./DataTable.css"
 import FontAwesome from "./FontAwesome"
 import { downloadFile } from "../lib/utilities"
+import { useColorScheme } from "@mantine/hooks"
 
 export const downloadTableData = (tableName: string, tableData: TableData) => {
   const csv =
@@ -59,6 +61,8 @@ const DataTable = ({
   const [sortByColumn, setSortByColumn] = useState(defaultSort ?? 0)
   const [reversed, setReversed] = useState(defaultReversed ?? false)
   const [search, setSearch] = useState("")
+  const theme = useMantineTheme()
+  const colorScheme = useColorScheme()
 
   if (hideIfEmpty && data.body.length === 0) {
     return <></>
@@ -129,9 +133,16 @@ const DataTable = ({
         value={search}
         onChange={(e) => setSearch(e.currentTarget.value)}
       />
-      <div style={{ maxWidth: "100%", overflow: "auto" }}>
+      <div style={{ maxWidth: "100%", overflow: "auto", maxHeight: 500 }}>
         <Table horizontalSpacing={7.5} verticalSpacing={7.5}>
-          <Table.Thead>
+          <Table.Thead
+            style={{
+              position: "sticky",
+              top: 0,
+              backgroundColor:
+                colorScheme === "dark" ? theme.colors.dark[7] : "white",
+            }}
+          >
             <Table.Tr>
               {selectable && <Table.Th />}
               {displayData.head?.map((element, columnIndex) => (

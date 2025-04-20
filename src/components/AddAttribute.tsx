@@ -19,6 +19,7 @@ const AddAttribute = () => {
   const [name, setName] = useState("")
   const [icon, setIcon] = useState("")
   const [color, setColor] = useState("")
+  const [description, setDescription] = useState("")
   const [defaultSort, setDefaultSort] = useState("")
   const [priority, setPriority] = useState("")
   const [derivativeAttributes, setDerivativeAttributes] = useState<string[]>([])
@@ -41,6 +42,7 @@ const AddAttribute = () => {
       setIsLocation(course.attributes[name].isLocation ?? false)
       setKind(course.attributes[name].kind ?? "string")
       setColor(course.attributes[name].color ?? "")
+      setDescription(course.attributes[name].description ?? "")
       setIsButton(course.attributes[name].isButton ?? false)
       setDerivativeAttributes(
         course.attributes[name].derivativeAttributes ?? [],
@@ -57,6 +59,7 @@ const AddAttribute = () => {
       setIsButton(false)
       setDerivativeAttributes([])
       setDefaultSort("")
+      setDescription("")
     }
   }, [name])
 
@@ -84,6 +87,12 @@ const AddAttribute = () => {
         label="צבע"
         value={color}
         onChange={setColor}
+      />
+      <TextInput
+        mt="xs"
+        label="תיאור"
+        value={description}
+        onChange={(e) => setDescription(e.currentTarget.value)}
       />
       <Select
         mt="xs"
@@ -160,6 +169,7 @@ const AddAttribute = () => {
                 defaultSort,
                 isButton,
                 derivativeAttributes,
+                description,
                 kind,
               } as Attribute,
             },

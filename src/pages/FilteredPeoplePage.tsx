@@ -272,6 +272,16 @@ const FilteredPeoplePage = () => {
                 ),
               ),
             }}
+            renderHead={(columnName) => (
+              <>
+                <p style={{ display: "inline" }}>{columnName}</p>
+                {course.attributes![columnName]?.description !== undefined && (
+                  <p style={{ fontWeight: "normal", fontSize: 12 }}>
+                    {course.attributes![columnName]!.description}
+                  </p>
+                )}
+              </>
+            )}
             renderValue={(rowIndex, columnName, value) => {
               if (columnName === "") {
                 return (
