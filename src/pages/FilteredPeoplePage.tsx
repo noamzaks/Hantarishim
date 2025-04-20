@@ -274,6 +274,14 @@ const FilteredPeoplePage = () => {
             }}
             renderHead={(columnName) => (
               <>
+                {course.attributes![columnName]?.icon !== undefined && (
+                  <FontAwesome
+                    props={{ style: { marginBottom: 5 } }}
+                    icon={
+                      course.attributes![columnName].icon as FontAwesomeIcon
+                    }
+                  />
+                )}
                 <p style={{ display: "inline" }}>{columnName}</p>
                 {course.attributes![columnName]?.description !== undefined && (
                   <p style={{ fontWeight: "normal", fontSize: 12 }}>
@@ -454,6 +462,7 @@ const FilteredPeoplePage = () => {
 
               return <React.Fragment key={rowIndex}>{value}</React.Fragment>
             }}
+            stickyFirstColumn
           />
           {(course.attributes ?? {})[attribute]?.quickDeletable && (
             <Fieldset legend="שיוך" mt="xs">

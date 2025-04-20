@@ -40,6 +40,7 @@ const DataTable = ({
   setSelectedRows,
   defaultSort,
   defaultReversed,
+  stickyFirstColumn,
 }: {
   tableName: string
   data: DataTableData
@@ -57,6 +58,7 @@ const DataTable = ({
   setSelectedRows?: React.Dispatch<React.SetStateAction<number[]>>
   defaultSort?: number
   defaultReversed?: boolean
+  stickyFirstColumn?: boolean
 }) => {
   const [sortByColumn, setSortByColumn] = useState(defaultSort ?? 0)
   const [reversed, setReversed] = useState(defaultReversed ?? false)
@@ -143,16 +145,22 @@ const DataTable = ({
                 colorScheme === "dark" ? theme.colors.dark[7] : "white",
             }}
           >
-            <Table.Tr>
+            <Table.Tr h={1}>
               {selectable && <Table.Th />}
               {displayData.head?.map((element, columnIndex) => (
                 <Table.Th
                   key={columnIndex}
-                  style={{ padding: 0, verticalAlign: "top" }}
+                  style={{
+                    padding: 0,
+                    verticalAlign: "top",
+                    height: "inherit",
+                  }}
                 >
                   {element !== "" && (
                     <UnstyledButton
+                      h="100%"
                       className="control"
+                      style={{ display: "flex", flexDirection: "column" }}
                       onClick={
                         disableSort
                           ? undefined
@@ -167,7 +175,7 @@ const DataTable = ({
                     >
                       {disableSort || (
                         <FontAwesome
-                          props={{ style: { fontSize: 14, marginInline: 5 } }}
+                          props={{ style: { fontSize: 14, marginBottom: 5 } }}
                           icon={
                             sortByColumn === columnIndex
                               ? reversed
@@ -209,7 +217,23 @@ const DataTable = ({
                     </Table.Td>
                   )}
                   {row.map((value, valueIndex) => (
-                    <Table.Td key={valueIndex} style={{ whiteSpace: "nowrap" }}>
+                    <Table.Td
+                      key={valueIndex}
+                      style={{
+                        whiteSpace: "nowrap",
+                        ...(stickyFirstColumn && valueIndex === 0
+                          ? {
+                              position: "sticky",
+                              right: 0,
+                              backgroundColor:
+                                colorScheme === "dark"
+                                  ? theme.colors.dark[7]
+                                  : "white",
+                              zIndex: 100,
+                            }
+                          : {}),
+                      }}
+                    >
                       {value}
                     </Table.Td>
                   ))}
