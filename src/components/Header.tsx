@@ -18,6 +18,14 @@ const Header = ({
     key: "Local Mode",
     defaultValue: false,
   })
+  const [filterAttribute] = useLocalStorage<string | null>({
+    key: "Filter Attribute",
+    defaultValue: null,
+  })
+  const [filterValue] = useLocalStorage<string | undefined>({
+    key: "Filter Value",
+    defaultValue: undefined,
+  })
 
   return (
     <header
@@ -34,12 +42,25 @@ const Header = ({
         overflow: "auto",
       }}
     >
-      <h3
-        style={{ marginInline: 10, cursor: "pointer" }}
-        onClick={() => navigate("/")}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          textAlign: "center",
+        }}
       >
-        חנתרישים{localMode ? " לא קל לי" : ""}
-      </h3>
+        <h3
+          style={{ marginInline: 10, cursor: "pointer" }}
+          onClick={() => navigate("/")}
+        >
+          חנתרישים{localMode ? " לא קל לי" : ""}
+        </h3>
+        <span style={{ marginTop: -5 }}>
+          {filterAttribute !== null &&
+            filterValue !== undefined &&
+            `${filterAttribute}: ${filterValue}`}
+        </span>
+      </div>
       {loading && (
         <>
           <Loader size="sm" ml={5} />
