@@ -161,7 +161,11 @@ const DataTable = ({
                     <UnstyledButton
                       h="100%"
                       className="control"
-                      style={{ display: "flex", flexDirection: "column" }}
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        minWidth: 100,
+                      }}
                       onClick={
                         disableSort
                           ? undefined
