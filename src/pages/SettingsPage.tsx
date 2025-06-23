@@ -1,12 +1,15 @@
 import { Switch } from "@mantine/core"
+import { doc, setDoc } from "firebase/firestore"
+import { useEffect, useState } from "react"
 import AddAttribute from "../components/AddAttribute"
 import AddPerson from "../components/AddPerson"
 import DropCSV from "../components/DropCSV"
-import PersonChooser from "../components/PersonChooser"
-import { useCourse } from "../models"
-import { useState } from "react"
-import { useLocalStorage } from "../lib/hooks"
 import FilterPeople from "../components/FilterPeople"
+import PersonChooser from "../components/PersonChooser"
+import { auth, firestore } from "../firebase"
+import { useLocalStorage } from "../lib/hooks"
+import { emailToUsername } from "../lib/utilities"
+import { Course, useCourse } from "../models"
 
 const SettingsPage = () => {
   const [course, updateCourse] = useCourse()
@@ -15,6 +18,15 @@ const SettingsPage = () => {
     defaultValue: false,
   })
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    if (Object.keys(course).length === 0) {
+      setDoc(
+        doc(firestore, `/users/${emailToUsername(auth.currentUser!.email!)}`),
+        { people: {} } as Course,
+      )
+    }
+  }, [course])
 
   return (
     <>
