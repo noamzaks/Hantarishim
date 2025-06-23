@@ -1,5 +1,3 @@
-import { useNavigate, useParams } from "react-router-dom"
-import { getAttributes, getPeopleForAttribute, useCourse } from "../models"
 import {
   ActionIcon,
   Alert,
@@ -11,22 +9,23 @@ import {
   TextInput,
   Tooltip,
 } from "@mantine/core"
-import FontAwesome, { FontAwesomeIcon } from "../components/FontAwesome"
-import { useEffect, useState } from "react"
-import DataTable from "../components/DataTable"
-import React from "react"
-import LinkAnchor from "../components/LinkAnchor"
+import { modals } from "@mantine/modals"
+import { deleteField } from "firebase/firestore"
+import React, { useEffect, useState } from "react"
+import { useNavigate, useParams } from "react-router-dom"
+import AbsenceEditor from "../components/AbsenceEditor"
 import Clock from "../components/Clock"
+import DataTable from "../components/DataTable"
+import FontAwesome, { FontAwesomeIcon } from "../components/FontAwesome"
+import LinkAnchor from "../components/LinkAnchor"
+import { useLocalStorage } from "../lib/hooks"
 import {
   getLocalStorage,
   setLocalStorage,
   showError,
   showSuccess,
 } from "../lib/utilities"
-import { useLocalStorage } from "../lib/hooks"
-import AbsenceEditor from "../components/AbsenceEditor"
-import { deleteField } from "firebase/firestore"
-import { modals } from "@mantine/modals"
+import { getAttributes, getPeopleForAttribute, useCourse } from "../models"
 import { getUpdater } from "../utilities"
 
 const ATTENDANCE_ID = "attendance"
@@ -422,6 +421,8 @@ const FilteredPeoplePage = () => {
                     }}
                   >
                     <AbsenceEditor
+                      w="100%"
+                      maw="100%"
                       defaultValue={value}
                       setValue={(v, setLoading) =>
                         updateCourse(

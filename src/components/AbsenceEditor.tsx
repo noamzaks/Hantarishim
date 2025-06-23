@@ -5,12 +5,16 @@ import FontAwesome from "./FontAwesome"
 const AbsenceEditor = ({
   defaultValue,
   setValue: setValuePersistent,
+  w,
+  maw,
 }: {
   defaultValue: string
   setValue: (
     v: string,
     setLoading: React.Dispatch<React.SetStateAction<boolean>>,
   ) => void
+  w?: string
+  maw?: string
 }) => {
   const [value, setValue] = useState<string>()
   const [loading, setLoading] = useState(false)
@@ -26,7 +30,8 @@ const AbsenceEditor = ({
       autosize
       flex="none"
       miw="200"
-      maw="300"
+      w={w}
+      maw={maw ?? "300"}
       value={value ?? ""}
       onChange={(e) => setValue(e.currentTarget.value)}
       rightSection={

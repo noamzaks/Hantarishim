@@ -1,8 +1,8 @@
-import { Fieldset, TextInput, Button, Autocomplete } from "@mantine/core"
+import { Autocomplete, Button, Fieldset, TextInput } from "@mantine/core"
+import { deleteField } from "firebase/firestore"
 import { useEffect, useState } from "react"
 import { getAttributes, useCourse } from "../models"
 import FontAwesome, { FontAwesomeIcon } from "./FontAwesome"
-import { deleteField } from "firebase/firestore"
 
 const AddPerson = () => {
   const [course, updateCourse] = useCourse()
@@ -36,7 +36,11 @@ const AddPerson = () => {
             label={attribute}
             mt="xs"
             value={attributes[attribute] ?? ""}
-            type={course.attributes![attribute].kind ? "number" : undefined}
+            type={
+              course.attributes![attribute].kind === "number"
+                ? "number"
+                : undefined
+            }
             onChange={(e) => {
               const newAttributes = {
                 ...attributes,
